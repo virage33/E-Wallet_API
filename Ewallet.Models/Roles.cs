@@ -1,13 +1,15 @@
-﻿using System;
+﻿using EwalletApi.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Ewallet.Models
 {
-    public enum Roles
+    public class Roles
     {
-        Admin,
-        Noob,
-        Elite
+        public string Id { get; set;}
+        public string Role { get; set;}
+
+        public UserModel user { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace EwalletApi.UI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+
         // GET: api/<UserController>
         [HttpGet]
         public IEnumerable<string> Get()
