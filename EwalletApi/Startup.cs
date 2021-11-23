@@ -1,4 +1,7 @@
+using EwalletApi.Services.AuthService.Interfaces;
 using EwalletApi.UI.Services;
+using EwalletApi.UI.Services.AuthService.Implementations;
+using EwalletApi.UI.Services.AuthService.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +34,9 @@ namespace EwalletApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IJwtService, JwtService>();
-       
+            services.AddScoped<ILogin, Login>();
+            services.AddTransient<IRegister, Register>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

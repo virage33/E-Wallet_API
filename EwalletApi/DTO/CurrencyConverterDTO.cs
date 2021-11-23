@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EwalletApi.Models.DTO
+namespace EwalletApi.UI.DTO
 {
     public class CurrencyConverterDTO
     {

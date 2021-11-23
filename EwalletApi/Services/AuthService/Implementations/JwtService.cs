@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EwalletApi.UI.Services.AuthService.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EwalletApi.UI.Services
+namespace EwalletApi.UI.Services.AuthService.Implementations
 {
     public class JwtService : IJwtService
     {

@@ -1,4 +1,6 @@
-﻿using EwalletApi.UI.Services;
+﻿using EwalletApi.Services.AuthService.Interfaces;
+using EwalletApi.UI.DTO;
+using EwalletApi.UI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,24 +13,35 @@ namespace EwalletApi.UI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+ 
     public class AuthorizationController : ControllerBase
     {
-        private readonly IJwtService jwt;
+        //private readonly IJwtService jwt;
+        private readonly ILogin _login;
 
-        public AuthorizationController(IJwtService _jwt)
+        public AuthorizationController(ILogin login)
         {
-            jwt = _jwt;
+            _login = login;
+          //  jwt = _jwt;
         }
-        [HttpGet("Login")]
-        public IActionResult Login()
+
+       
+        [HttpPost("Login")]
+        public IActionResult Login([FromForm]LoginDTO credentials )
         {
-            return Ok(jwt.GenerateToken());
+            var token = _login.LogIn(credentials);
+            if (token == null)
+                return Unauthorized();
+            return Ok(token);
         }
-        [HttpGet]
-        [Authorize]
-        public IActionResult Authorize()
+        
+      
+        [HttpPost("Register")]
+        public IActionResult Register([FromBody]RegisterDTO details)
         {
-            return Ok("Authorized");
+
+            return Ok();
         }
+      
     }
 }

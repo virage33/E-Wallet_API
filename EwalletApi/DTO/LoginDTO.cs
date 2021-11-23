@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EwalletApi.Models.DTO
+namespace EwalletApi.UI.DTO
 {
     public class LoginDTO
     {
-        [EmailAddress]
+        [EmailAddress(ErrorMessage ="Please Enter a valid email")]
         [Required]
         public string Email { get; set; }
  
