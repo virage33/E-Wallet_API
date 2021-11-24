@@ -16,7 +16,7 @@ namespace EwalletApi.UI.Controllers
     [Authorize(Roles = "Noob, Elite")]
     public class TransactionController : ControllerBase
     {
-        // GET: api/<TransactionController>
+        
         [HttpGet("GetAllTransactions")]
         public IEnumerable<string> GetAllTransactions()
         {

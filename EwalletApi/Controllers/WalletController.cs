@@ -24,16 +24,22 @@ namespace EwalletApi.Controllers
 
         // Gets an individual wallet
         [HttpGet("{id}")]
-        public string GetIndividualWallet(string walletId)
+        public async Task<IActionResult> GetIndividualWallet(string walletId)
         {
-            return "value";
+            return Ok();
         }
 
 
        //Deletes individual wallets
         [HttpDelete("{id}")]
         [Authorize(Roles ="Elite")]
-        public IActionResult DeleteWallet(string walletId)
+        public async Task<IActionResult> DeleteWallet(string walletId)
+        {
+            return Ok();
+        }
+
+        [HttpPost("AddWallet")]
+        public async Task<IActionResult> AddWallet()
         {
             return Ok();
         }

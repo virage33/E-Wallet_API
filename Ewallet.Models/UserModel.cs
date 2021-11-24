@@ -21,8 +21,8 @@ namespace EwalletApi.Models
         [Required]
         public string Email { get; set; }
         public string UserId { get; set; } 
-        public ICollection<Roles> Role { get; set; }
-        public ICollection<WalletModel> Wallet { get; set; }
+        public List<Roles> Role { get; set; }
+        public List<WalletModel> Wallet { get; set; }
         public UserModel()
         {
             UserId = Guid.NewGuid().ToString();

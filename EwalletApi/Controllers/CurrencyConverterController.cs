@@ -16,7 +16,7 @@ namespace EwalletApi.UI.Controllers
     {
         // GET: api/<CurrencyConverterController>
         [HttpGet("Result")]
-        public IActionResult Get()
+        public IActionResult Result()
         {
             return Ok();
         }
@@ -24,7 +24,7 @@ namespace EwalletApi.UI.Controllers
       
         // POST api/<CurrencyConverterController>
         [HttpPost("Convert")]
-        public IActionResult Post([FromBody] int value)
+        public IActionResult CurrencyToConvert([FromBody] int value)
         {
             return Ok();
         }

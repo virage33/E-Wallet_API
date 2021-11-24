@@ -10,7 +10,9 @@ namespace EwalletApi.Models.AccountModels
         
         public string Type { get; set; }
         public string Code { get; set; }
-        public string CurrencyId { get; set; }
+        public bool IsMain { get; set; }
+        public  decimal Balance { get; set; }
+        public string Id { get; set; }
         public WalletModel Wallet { get; set; }
     }
 }

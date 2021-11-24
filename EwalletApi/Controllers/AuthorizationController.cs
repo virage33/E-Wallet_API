@@ -48,6 +48,12 @@ namespace EwalletApi.UI.Controllers
         {
             return Ok();
         }
-      
+        [Authorize]
+        [HttpPost]
+        public  IActionResult Logout()
+        {
+            return Ok();
+        }
+
     }
 }
