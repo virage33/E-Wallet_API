@@ -34,12 +34,18 @@ namespace EwalletApi.UI.Controllers
                 return Unauthorized();
             return Ok(token);
         }
-        
-      
+
+        [Authorize(Roles = "Noob , Elite")]
         [HttpPost("Register")]
         public IActionResult Register([FromBody]RegisterDTO details)
         {
 
+            return Ok();
+        }
+
+        [HttpPost("Forgot Password")]
+        public IActionResult ForgotPassword([FromBody]ChangePasswordDTO details)
+        {
             return Ok();
         }
       

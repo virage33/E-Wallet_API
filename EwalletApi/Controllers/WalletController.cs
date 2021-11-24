@@ -16,21 +16,23 @@ namespace EwalletApi.Controllers
     {
         // GET: api/<WalletController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Authorize(Roles = "Noob , Elite")]
+        public IEnumerable<string> GetUserWallets(string userId)
         {
             return new string[] { "value1", "value2" };
         }
 
         // GET api/<WalletController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string GetIndividualWallet(int walletId)
         {
             return "value";
         }
 
         // POST api/<WalletController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize(Roles = "Noob , Elite, Admin")]
+        public void FundWallet([FromBody] string value)
         {
         }
 

@@ -15,7 +15,7 @@ namespace EwalletApi.UI.DTO
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
         [Required]
-        [Phone]
+       
         [Display(Name = "Phone No.")]
         public int PhoneNumber { get; set; }
         [EmailAddress (ErrorMessage ="please enter a valid email")]
@@ -24,6 +24,7 @@ namespace EwalletApi.UI.DTO
         [Required]
         public string Password{ get; set; }
         [Required]
+        [Display(Name ="Main Wallet Currency")]
         public string MainWalletCurrency { get; set; }
 
 

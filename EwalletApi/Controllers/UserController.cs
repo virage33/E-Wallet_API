@@ -11,12 +11,13 @@ namespace EwalletApi.UI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    
     public class UserController : ControllerBase
     {
 
         // GET: api/<UserController>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
@@ -24,27 +25,32 @@ namespace EwalletApi.UI.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Noob , Elite , Admin")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<UserController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
+        
         // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPatch("{id}")]
+        [Authorize(Roles = "Noob , Elite , Admin")]
+        public void UpdateUserProfile(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize(Roles = "Noob, Elite, Admin")]
+        public void DeleteUserAccount(string id)
         {
+        }
+
+        [HttpPatch("{id}")]
+        [Authorize(Roles ="Admin")]
+        public void ChangeUserRole(string id)
+        {
+
         }
     }
 }

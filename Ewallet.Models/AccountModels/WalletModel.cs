@@ -12,6 +12,7 @@ namespace EwalletApi.Models.AccountModels
         public Currency Currency { get; set; }
         public int AccountBalance { get; set;}
         public Transactions Transactions { get; set; }
+        public UserModel User { get; set; }
 
     }
 }

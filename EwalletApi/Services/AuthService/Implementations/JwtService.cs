@@ -22,7 +22,9 @@ namespace EwalletApi.UI.Services.AuthService.Implementations
         {
             var claims = new List<Claim>();
             var claim = new Claim(type: ClaimTypes.NameIdentifier, value: "MyClaim");
+            var adminClaim = new Claim(type: "role", value: "admin");
             claims.Add(claim);
+            claims.Add(adminClaim);
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTKey"]));
 

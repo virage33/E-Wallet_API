@@ -38,6 +38,17 @@ namespace EwalletApi
             services.AddTransient<IRegister, Register>();
 
             services.AddControllers();
+            services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(option => {
+                var param = new TokenValidationParameters();
+                param.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTKey"]));
+                param.ValidateIssuer = false;
+                param.ValidateAudience = false;
+                option.TokenValidationParameters = param;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EwalletApi", Version = "v1" });
@@ -63,17 +74,7 @@ namespace EwalletApi
                     }
                 });
             });
-            services.AddAuthentication(option =>
-            {
-                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(option => {
-                var param = new TokenValidationParameters();
-                param.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTKey"]));
-                param.ValidateIssuer = false;
-                param.ValidateAudience = false;
-                option.TokenValidationParameters = param;
-            });
+           
 
         }
 
