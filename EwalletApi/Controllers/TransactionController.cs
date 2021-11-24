@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using EwalletApi.UI.DTO.WalletDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,31 +12,46 @@ namespace EwalletApi.UI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
+    [Authorize(Roles = "Noob, Elite")]
     public class TransactionController : ControllerBase
     {
         // GET: api/<TransactionController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("GetAllTransactions")]
+        public IEnumerable<string> GetAllTransactions()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<TransactionController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+       
+        [HttpGet("WithdrawFunds/{id}")]
+        public IActionResult WithdrawFunds(int id)
         {
-            return "value";
+            return Ok();
         }
 
-        // POST api/<TransactionController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+
+        [HttpPost("TransferFunds")]
+        public IActionResult TransferFunds([FromBody] TransferFundsDTO details)
         {
+            return Ok();
         }
 
-       
 
-       
+        [HttpPost("FundWallet")]
+        [Authorize(Roles = "Noob , Elite, Admin")]
+        public IActionResult FundWallet([FromBody] FundWalletDTO details)
+        {
+            return Ok();
+        }
+
+        [HttpDelete("ClearTransactionHistory")]
+        public IActionResult ClearTransactionHistory()
+        {
+            return Ok();
+        }
+
+
+
     }
 }

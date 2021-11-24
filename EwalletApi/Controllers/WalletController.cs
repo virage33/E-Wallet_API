@@ -14,7 +14,7 @@ namespace EwalletApi.Controllers
     [Authorize]
     public class WalletController : ControllerBase
     {
-        // GET: api/<WalletController>
+        //Gets all user wallets
         [HttpGet]
         [Authorize(Roles = "Noob , Elite")]
         public IEnumerable<string> GetUserWallets(string userId)
@@ -22,30 +22,20 @@ namespace EwalletApi.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<WalletController>/5
+        // Gets an individual wallet
         [HttpGet("{id}")]
-        public string GetIndividualWallet(int walletId)
+        public string GetIndividualWallet(string walletId)
         {
             return "value";
         }
 
-        // POST api/<WalletController>
-        [HttpPost]
-        [Authorize(Roles = "Noob , Elite, Admin")]
-        public void FundWallet([FromBody] string value)
-        {
-        }
 
-        // PUT api/<WalletController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<WalletController>/5
+       //Deletes individual wallets
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize(Roles ="Elite")]
+        public IActionResult DeleteWallet(string walletId)
         {
+            return Ok();
         }
     }
 }

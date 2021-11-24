@@ -16,13 +16,13 @@ namespace EwalletApi.UI.Controllers
  
     public class AuthorizationController : ControllerBase
     {
-        //private readonly IJwtService jwt;
+        
         private readonly ILogin _login;
 
         public AuthorizationController(ILogin login)
         {
             _login = login;
-          //  jwt = _jwt;
+        
         }
 
        

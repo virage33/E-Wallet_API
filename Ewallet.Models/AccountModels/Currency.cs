@@ -8,8 +8,8 @@ namespace EwalletApi.Models.AccountModels
     public class Currency
     {
         
-        public CurrencyType Type { get; set; }
-        public string Symbol { get; set; }
+        public string Type { get; set; }
+        public string Code { get; set; }
         public string CurrencyId { get; set; }
         public WalletModel Wallet { get; set; }
     }

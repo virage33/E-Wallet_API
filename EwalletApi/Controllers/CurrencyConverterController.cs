@@ -15,17 +15,18 @@ namespace EwalletApi.UI.Controllers
     public class CurrencyConverterController : ControllerBase
     {
         // GET: api/<CurrencyConverterController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("Result")]
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok();
         }
 
       
         // POST api/<CurrencyConverterController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("Convert")]
+        public IActionResult Post([FromBody] int value)
         {
+            return Ok();
         }
 
     }

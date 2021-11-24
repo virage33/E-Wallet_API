@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 
 namespace EwalletApi.UI.Controllers
 {
@@ -15,42 +15,45 @@ namespace EwalletApi.UI.Controllers
     public class UserController : ControllerBase
     {
 
-        // GET: api/<UserController>
-        [HttpGet]
+        // GETs all user non-sensitive data
+        [HttpGet("GetAllUsers")]
         [Authorize(Roles = "Admin")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
+        // GET personal user profile
+        [HttpGet("GetProfile/{id}")]
         [Authorize(Roles = "Noob , Elite , Admin")]
-        public string Get(int id)
+        public IActionResult GetProfile(string id)
         {
-            return "value";
+            return Ok();
         }
 
-        
-        // PUT api/<UserController>/5
-        [HttpPatch("{id}")]
-        [Authorize(Roles = "Noob , Elite , Admin")]
-        public void UpdateUserProfile(int id, [FromBody] string value)
+
+        //updates user profile
+       [HttpPatch("UpdateUserProfile/{id}")]
+       [Authorize(Roles = "Noob , Elite , Admin")]
+        public IActionResult UpdateUserProfile(int id, [FromBody] string value)
         {
+            return Ok();
         }
 
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
+        // DELETE personal user account
+        [HttpDelete("DeleteUser/{id}")]
         [Authorize(Roles = "Noob, Elite, Admin")]
-        public void DeleteUserAccount(string id)
+        public IActionResult DeleteUserAccount(string id)
         {
+            return Ok();
         }
 
-        [HttpPatch("{id}")]
+        //Upgrades and downgrades a user
+        [HttpPatch("ChangeUserRole/{id}")]
         [Authorize(Roles ="Admin")]
-        public void ChangeUserRole(string id)
+        public IActionResult ChangeUserRole(string id)
         {
-
+            return Ok();
         }
     }
 }
