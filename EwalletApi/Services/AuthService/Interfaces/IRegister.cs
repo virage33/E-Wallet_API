@@ -1,4 +1,5 @@
-﻿using EwalletApi.UI.DTO;
+﻿using Ewallet.Core.DTO;
+
 
 namespace EwalletApi.Services.AuthService.Interfaces
 {

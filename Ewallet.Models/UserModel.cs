@@ -17,16 +17,18 @@ namespace EwalletApi.Models
         [Required]
         public int PhoneNumber { get; set; }
         [Required]
+        [MinLength(6)]
         public string password { get; set; }
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
         public string UserId { get; set; } 
-        public List<Roles> Role { get; set; }
+        public List<UserRoles> Role { get; set; }
         public List<WalletModel> Wallet { get; set; }
         public UserModel()
         {
             UserId = Guid.NewGuid().ToString();
-            Role = new List<Roles>();
+            Role = new List<UserRoles>();
             Wallet = new List<WalletModel>();
         }
     }

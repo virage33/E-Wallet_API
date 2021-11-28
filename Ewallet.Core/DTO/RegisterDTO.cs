@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EwalletApi.UI.DTO
+namespace Ewallet.Core.DTO
 {
     public class RegisterDTO
     {
@@ -22,7 +22,12 @@ namespace EwalletApi.UI.DTO
         [Required]
         public string Email { get; set; }
         [Required]
+        [MinLength(6,ErrorMessage ="password must not be less than 6 characters")]
         public string Password{ get; set; }
+
+        [Display(Name ="Confirm Password")]
+        public string ConfirmPassword { get; set; }
+
         [Required]
         [Display(Name ="Main Wallet Currency")]
         public string MainWalletCurrency { get; set; }

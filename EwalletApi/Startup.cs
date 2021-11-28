@@ -37,6 +37,8 @@ namespace EwalletApi
             services.AddScoped<ILogin, Login>();
             services.AddTransient<IRegister, Register>();
 
+            //services.AddScoped<IUserRepository, UserRepository>()
+
             services.AddControllers();
             services.AddAuthentication(option =>
             {

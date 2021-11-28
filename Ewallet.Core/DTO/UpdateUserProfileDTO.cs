@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EwalletApi.UI.DTO
+namespace Ewallet.Core.DTO
 {
     public class UpdateUserProfileDTO
     {

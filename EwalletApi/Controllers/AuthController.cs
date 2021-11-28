@@ -1,5 +1,6 @@
-﻿using EwalletApi.Services.AuthService.Interfaces;
-using EwalletApi.UI.DTO;
+﻿using Ewallet.Core.DTO;
+using EwalletApi.Services.AuthService.Interfaces;
+
 using EwalletApi.UI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,12 +15,12 @@ namespace EwalletApi.UI.Controllers
     [Route("api/[controller]")]
     [ApiController]
  
-    public class AuthorizationController : ControllerBase
+    public class AuthController : ControllerBase
     {
         
         private readonly ILogin _login;
 
-        public AuthorizationController(ILogin login)
+        public AuthController(ILogin login)
         {
             _login = login;
         
@@ -39,6 +40,14 @@ namespace EwalletApi.UI.Controllers
         [HttpPost("Register")]
         public IActionResult Register([FromBody]RegisterDTO details)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+            if (details.ConfirmPassword != details.Password)
+                return BadRequest();
+
+            // UserDTO existing = await getuserbyemal;
+            // if (existing!=null)
+            //  return conflict();
 
             return Ok();
         }

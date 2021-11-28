@@ -12,7 +12,7 @@ namespace EwalletApi.Models.AccountModels
         public string AccountAddress { get; set; }
         public string Remark { get; set; }
         public string TransactionType { get; set; }
-
+                                                                                
         public Transactions()
         {
             Date = DateTime.Now;

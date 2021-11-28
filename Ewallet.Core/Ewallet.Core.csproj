@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="AuthService\Implementations\" />
     <Folder Include="WalletService\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ewallet.DataAccess\Ewallet.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

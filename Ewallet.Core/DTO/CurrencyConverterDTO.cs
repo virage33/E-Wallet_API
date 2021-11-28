@@ -4,13 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EwalletApi.UI.DTO.WalletDTO
+namespace Ewallet.Core.DTO
 {
-    public class WithdrawFundsDTO
+    public class CurrencyConverterDTO
     {
         [Required]
-        public decimal Amount { get; set; }
+        public string From { get; set; }
         [Required]
-        public string destinationAddress { get; set; }
+        public string To { get; set; }
     }
 }

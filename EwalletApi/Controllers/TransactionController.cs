@@ -1,4 +1,5 @@
-﻿using EwalletApi.UI.DTO.WalletDTO;
+﻿
+using Ewallet.Core.DTO.WalletDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

@@ -1,5 +1,6 @@
-﻿using EwalletApi.Services.AuthService.Interfaces;
-using EwalletApi.UI.DTO;
+﻿using Ewallet.Core.DTO;
+using EwalletApi.Services.AuthService.Interfaces;
+
 using System;
 
 namespace EwalletApi.UI.Services.AuthService.Implementations
