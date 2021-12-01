@@ -10,6 +10,6 @@ namespace Ewallet.Core.Interfaces
     {
         Task<bool> Login(LoginDTO credentials);
 
-        Task<LoginDTO> Register(RegisterDTO details);
+        string Register(RegisterDTO details);
     }
 }

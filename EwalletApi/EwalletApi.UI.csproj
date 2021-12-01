@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ewallet.Core\Ewallet.Core.csproj" />
+    <ProjectReference Include="..\Ewallet.DataAccess\Ewallet.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

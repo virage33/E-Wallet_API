@@ -1,4 +1,5 @@
 ﻿using Ewallet.Core.DTO;
+using Ewallet.Core.Interfaces;
 using EwalletApi.Services.AuthService.Interfaces;
 
 using EwalletApi.UI.Services;
@@ -19,10 +20,13 @@ namespace EwalletApi.UI.Controllers
     {
         
         private readonly ILogin _login;
+        private readonly IAuthService authService; 
 
-        public AuthController(ILogin login)
+
+        public AuthController(ILogin login, IAuthService auth)
         {
             _login = login;
+            authService = auth;
         
         }
 
@@ -36,7 +40,7 @@ namespace EwalletApi.UI.Controllers
             return Ok(token);
         }
 
-        [Authorize(Roles = "Noob , Elite")]
+       // [Authorize(Roles = "Noob , Elite")]
         [HttpPost("Register")]
         public IActionResult Register([FromBody]RegisterDTO details)
         {
@@ -49,7 +53,9 @@ namespace EwalletApi.UI.Controllers
             // if (existing!=null)
             //  return conflict();
 
-            return Ok();
+            
+
+            return Ok(authService.Register(details));
         }
 
         [HttpPost("Forgot Password")]

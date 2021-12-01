@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ewallet.DataAccess.Implementations
 {
-    class WalletRepository : IWalletRepository
+    public class WalletRepository : IWalletRepository
     {
         public Task CreateWallet(string Uid)
         {

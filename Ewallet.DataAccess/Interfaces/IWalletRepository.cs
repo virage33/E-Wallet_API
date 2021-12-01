@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ewallet.DataAccess.Interfaces
 {
-    interface IWalletRepository
+    public interface IWalletRepository
     {
         Task GetAllUserWallets(string Uid);
         Task GetIndividualUserWallet(string Uid, string walletId);

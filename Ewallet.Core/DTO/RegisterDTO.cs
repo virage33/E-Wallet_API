@@ -14,7 +14,6 @@ namespace Ewallet.Core.DTO
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
-        [Required]
        
         [Display(Name = "Phone No.")]
         public int PhoneNumber { get; set; }
@@ -31,6 +30,9 @@ namespace Ewallet.Core.DTO
         [Required]
         [Display(Name ="Main Wallet Currency")]
         public string MainWalletCurrency { get; set; }
+        [Required]
+        [Display(Name ="User Type")]
+        public string Role { get; set; }
 
 
     }

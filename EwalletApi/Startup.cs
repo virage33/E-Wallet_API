@@ -18,6 +18,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ewallet.DataAccess.Implementations;
+using Ewallet.DataAccess.Interfaces;
+using Ewallet.Core.Interfaces;
+using Ewallet.Core.Implementations;
 
 namespace EwalletApi
 {
@@ -36,8 +40,12 @@ namespace EwalletApi
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ILogin, Login>();
             services.AddTransient<IRegister, Register>();
+            services.AddScoped<ITransactionRepository, TransactionsRepository>();
+            services.AddScoped<IAuthService, AuthService>();
 
-            //services.AddScoped<IUserRepository, UserRepository>()
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
 
             services.AddControllers();
             services.AddAuthentication(option =>

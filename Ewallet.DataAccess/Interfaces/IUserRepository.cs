@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Ewallet.DataAccess.Interfaces
 {
-    interface IUserRepository
+    public interface IUserRepository
     {
-        Task<UserModel> GetByEmail(string email);
-        Task<UserModel> GetByUserId(string Uid);
-        Task<UserModel> GetByUserName(string username);
-        Task<UserModel> GetAllUsers();
-        Task<UserModel> GetByRole(string Role);
+        UserModel GetUserByEmail(string email);
+        UserModel GetUserById(string Uid);
+        UserModel GetUserByName(string username);
+        Task<List<UserModel>> GetAllUsers();
+        UserModel GetUserByRole(string Role);
 
-        Task<UserModel> CreateUser(UserModel user);
-        Task DeleteUser(string Uid);
-        Task UpdateUserProfile();
+        Task<int> CreateUser(UserModel user);
+        Task<int> DeleteUser(string Uid);
+        Task<int> UpdateUserProfile();
     }
 }

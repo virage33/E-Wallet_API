@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ewallet.DataAccess\Ewallet.DataAccess.csproj" />
+    <ProjectReference Include="..\Ewallet.Models\Ewallet.Models.csproj" />
   </ItemGroup>
 
 </Project>

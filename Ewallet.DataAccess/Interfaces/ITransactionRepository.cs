@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ewallet.DataAccess.Interfaces
 {
-    interface ITransactionRepository
+    public interface ITransactionRepository
     {
         Task SetMainCurrency(string Uid,string walletId);
         Task WithdrawFunds(Transactions Withdrawal);

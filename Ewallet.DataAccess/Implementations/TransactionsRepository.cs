@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ewallet.DataAccess.Implementations
 {
-    class TransactionsRepository : ITransactionRepository
+    public class TransactionsRepository : ITransactionRepository
     {
         public Task DepositFunds(Transactions Deposit)
         {
