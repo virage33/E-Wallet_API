@@ -15,7 +15,7 @@ namespace EwalletApi.Models
         [Required]
         public string LastName { get; set; }
         [Required]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         [Required]
         [MinLength(6)]
         public string password { get; set; }

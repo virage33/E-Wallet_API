@@ -1,15 +1,13 @@
-﻿using EwalletApi.UI.Services.AuthService.Interfaces;
+﻿using Ewallet.Core.JWT.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace EwalletApi.UI.Services.AuthService.Implementations
+namespace Ewallet.Core.JWT.Implementations
 {
     public class JwtService : IJwtService
     {

@@ -8,14 +8,15 @@ namespace Ewallet.DataAccess.Interfaces
 {
     public interface IUserRepository
     {
-        UserModel GetUserByEmail(string email);
-        UserModel GetUserById(string Uid);
-        UserModel GetUserByName(string username);
+        Task<UserModel> GetUserByEmail(string email);
+        Task<UserModel> GetUserById(string Uid);
+        Task<List<UserModel>> GetUserByName(string username);
         Task<List<UserModel>> GetAllUsers();
-        UserModel GetUserByRole(string Role);
+        Task<List<UserModel>> GetUsersByRole(string Role);
 
         Task<int> CreateUser(UserModel user);
         Task<int> DeleteUser(string Uid);
-        Task<int> UpdateUserProfile();
+        Task<int> UpdateUserProfile(UserModel user);
+        
     }
 }

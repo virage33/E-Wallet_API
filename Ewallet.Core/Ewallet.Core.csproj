@@ -9,6 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Ewallet.DataAccess\Ewallet.DataAccess.csproj" />
     <ProjectReference Include="..\Ewallet.Models\Ewallet.Models.csproj" />
   </ItemGroup>

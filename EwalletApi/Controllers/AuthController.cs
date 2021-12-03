@@ -1,15 +1,7 @@
 ﻿using Ewallet.Core.DTO;
 using Ewallet.Core.Interfaces;
-using EwalletApi.Services.AuthService.Interfaces;
-
-using EwalletApi.UI.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EwalletApi.UI.Controllers
 {
@@ -19,13 +11,13 @@ namespace EwalletApi.UI.Controllers
     public class AuthController : ControllerBase
     {
         
-        private readonly ILogin _login;
+    
         private readonly IAuthService authService; 
 
 
-        public AuthController(ILogin login, IAuthService auth)
+        public AuthController(IAuthService auth)
         {
-            _login = login;
+           
             authService = auth;
         
         }
@@ -34,7 +26,7 @@ namespace EwalletApi.UI.Controllers
         [HttpPost("Login")]
         public IActionResult Login([FromForm]LoginDTO credentials )
         {
-            var token = _login.LogIn(credentials);
+            var token = authService.Login(credentials);
             if (token == null)
                 return Unauthorized();
             return Ok(token);
@@ -52,14 +44,12 @@ namespace EwalletApi.UI.Controllers
             // UserDTO existing = await getuserbyemal;
             // if (existing!=null)
             //  return conflict();
-
             
-
             return Ok(authService.Register(details));
         }
 
         [HttpPost("Forgot Password")]
-        public IActionResult ForgotPassword([FromBody]ChangePasswordDTO details)
+        public IActionResult ForgotPassword([FromBody]string email)
         {
             return Ok();
         }

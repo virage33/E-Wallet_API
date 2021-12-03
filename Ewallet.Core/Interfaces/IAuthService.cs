@@ -8,8 +8,10 @@ namespace Ewallet.Core.Interfaces
 {
     public interface IAuthService
     {
-        Task<bool> Login(LoginDTO credentials);
+        Task<string> Login(LoginDTO credentials);
 
-        string Register(RegisterDTO details);
+        Task<string> Register(RegisterDTO details);
+
+        void LogOut();
     }
 }

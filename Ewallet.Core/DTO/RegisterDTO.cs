@@ -16,7 +16,7 @@ namespace Ewallet.Core.DTO
         public string LastName { get; set; }
        
         [Display(Name = "Phone No.")]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         [EmailAddress (ErrorMessage ="please enter a valid email")]
         [Required]
         public string Email { get; set; }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Ewallet.Core.DTO;
+using Ewallet.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,13 +16,20 @@ namespace EwalletApi.UI.Controllers
     
     public class UserController : ControllerBase
     {
+        private IUserService UserService { get; set; }
+        public UserController(IUserService userService)
+        {
+            UserService = userService;
+        }
+
 
         // GETs all user non-sensitive data
         [HttpGet("GetAllUsers")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IEnumerable<string>> Get()
+       // [Authorize(Roles = "Admin")]
+        public async Task<IEnumerable<UserDTO>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await UserService.GetAllUsers();
+            return result;
         }
 
         // GET personal user profile
@@ -31,9 +40,16 @@ namespace EwalletApi.UI.Controllers
             return Ok();
         }
 
+        [HttpGet("GetUsersByName")]
+        // [Authorize(Roles = "Admin")]
+        public async Task<IEnumerable<UserDTO>> GetUsersByName(string name)
+        {
+            var result = await UserService.GetUsersByName(name);           
+            return result;
+        }
 
         //updates user profile
-       [HttpPatch("UpdateUserProfile/{id}")]
+        [HttpPatch("UpdateUserProfile/{id}")]
        [Authorize(Roles = "Noob , Elite , Admin")]
         public async Task<IActionResult> UpdateUserProfile(int id, [FromBody] string value)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EwalletApi.UI.Services.AuthService.Interfaces
+namespace Ewallet.Core.JWT.Interfaces
 {
     public interface IJwtService
     {
