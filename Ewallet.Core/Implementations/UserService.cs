@@ -87,14 +87,20 @@ namespace Ewallet.Core.Implementations
             throw new NotImplementedException();
         }
 
-        public Task DeActivateUser(string uid)
+        public async Task<string> DeActivateUser(string uid)
         {
-            throw new NotImplementedException();
+            var response = await UserRepository.ActivateOrDeActivateUser(false,uid);
+            if (response > 0)
+                return "Deactivated";
+            return "error";
         }
 
-        public Task ReActivateUser(string uid)
+        public async Task<string> ReActivateUser(string uid)
         {
-            throw new NotImplementedException();
+            var response = await UserRepository.ActivateOrDeActivateUser(true, uid);
+            if (response > 0)
+                return "Activated";
+            return "error";
         }
     }
 }

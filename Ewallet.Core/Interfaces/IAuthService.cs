@@ -13,5 +13,6 @@ namespace Ewallet.Core.Interfaces
         Task<string> Register(RegisterDTO details);
 
         void LogOut();
+        Task<string> ForgotPassword(string email);
     }
 }

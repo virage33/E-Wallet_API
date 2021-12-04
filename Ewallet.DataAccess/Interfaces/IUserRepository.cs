@@ -13,10 +13,9 @@ namespace Ewallet.DataAccess.Interfaces
         Task<List<UserModel>> GetUserByName(string username);
         Task<List<UserModel>> GetAllUsers();
         Task<List<UserModel>> GetUsersByRole(string Role);
-
+        Task<int> ActivateOrDeActivateUser(bool data, string uid);
         Task<int> CreateUser(UserModel user);
         Task<int> DeleteUser(string Uid);
         Task<int> UpdateUserProfile(UserModel user);
-        
     }
 }

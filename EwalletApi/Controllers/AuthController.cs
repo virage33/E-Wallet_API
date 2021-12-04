@@ -2,6 +2,7 @@
 using Ewallet.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace EwalletApi.UI.Controllers
 {
@@ -32,29 +33,42 @@ namespace EwalletApi.UI.Controllers
             return Ok(token);
         }
 
-       // [Authorize(Roles = "Noob , Elite")]
+
+       
         [HttpPost("Register")]
-        public IActionResult Register([FromBody]RegisterDTO details)
+        public async Task<IActionResult> Register([FromBody]RegisterDTO details)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
-            if (details.ConfirmPassword != details.Password)
-                return BadRequest();
-
-            // UserDTO existing = await getuserbyemal;
-            // if (existing!=null)
-            //  return conflict();
+                return BadRequest("Please enter valid data");
             
-            return Ok(authService.Register(details));
+            if (details.ConfirmPassword != details.Password)
+                return BadRequest("Password mismatch!");
+            
+            if (details.Role.ToLower() != "noob" && details.Role.ToLower() != "elite")
+                return BadRequest("User must be Noob or Elite");
+
+            var existing = await authService.Register(details);
+
+            if (existing == "exists")
+                return Conflict("User Exists!");
+
+            return Ok();
         }
 
         [HttpPost("Forgot Password")]
-        public IActionResult ForgotPassword([FromBody]string email)
+        public async Task<IActionResult> ForgotPassword([FromBody]ForgotPasswordDTO email)
         {
-            return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest("Please enter valid data");
+            var response = await authService.ForgotPassword(email.email);
+            if (response == "0")
+                return BadRequest("User does not Exist!");
+
+            return Ok(response);
         }
+
         [Authorize]
-        [HttpPost]
+        [HttpPost("Logout")]
         public  IActionResult Logout()
         {
             return Ok();

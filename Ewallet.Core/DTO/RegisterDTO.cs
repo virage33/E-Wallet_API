@@ -16,7 +16,10 @@ namespace Ewallet.Core.DTO
         public string LastName { get; set; }
        
         [Display(Name = "Phone No.")]
+        [MaxLength(11,ErrorMessage ="Must be 11 characters long")]
+        [MinLength(11,ErrorMessage ="Must be 11 characters long")]
         public string PhoneNumber { get; set; }
+
         [EmailAddress (ErrorMessage ="please enter a valid email")]
         [Required]
         public string Email { get; set; }

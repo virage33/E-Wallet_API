@@ -13,9 +13,10 @@ namespace Ewallet.DataAccess.Implementations
         private string CnString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\USERS\\HP\\SOURCE\\REPOS\\EWALLETAPI\\EWALLET.DB\\DB.MDF;Integrated Security = True; Connect Timeout = 30";
 
 
+        //Adds user to the database
         public async Task<int> CreateUser(UserModel user)
         {
-            string command = "INSERT INTO Users Values(@UserId,@FirstName,@LastName,@Email,@Password,@PhoneNumber)";
+            string command = "INSERT INTO Users Values(@UserId,@FirstName,@LastName,@Email,@Password,@PhoneNumber,@PasswordHash,@IsActive)";
             string isEmailExist = "Select Email from USERS WHERE Email = @Email";
             int response = 0;
 
@@ -48,6 +49,9 @@ namespace Ewallet.DataAccess.Implementations
                         cmd.Parameters.AddWithValue("@Email", user.Email);
                         cmd.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
                         cmd.Parameters.AddWithValue("@Password", user.password);
+                        cmd.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
+                        cmd.Parameters.AddWithValue("@IsActive", user.IsActive);
+
                         response = (int)cmd.ExecuteNonQuery();
                         con.Close();
                     }
@@ -137,6 +141,7 @@ namespace Ewallet.DataAccess.Implementations
         public async Task<UserModel> GetUserByEmail(string email)
         {
             string command = "SELECT * FROM Users WHERE Email=@Email";
+            string isEmailExist = "Select Email from USERS WHERE Email = @Email";
             UserModel user = new UserModel();
 
             try
@@ -145,6 +150,19 @@ namespace Ewallet.DataAccess.Implementations
 
                 var cmd = new SqlCommand(command, con);
                 cmd.Parameters.AddWithValue("@Email", email);
+                //checks if email already exists
+                await using (var cmd1 = new SqlCommand(isEmailExist, con))
+                {
+                    con.Open();
+                    cmd1.Parameters.AddWithValue("@Email", email);
+                    var exist = cmd1.ExecuteScalar();
+                    if (exist == null)
+                    {
+                        con.Close();
+                        return null;
+                    }
+                    con.Close();
+                }
                 con.Open();
 
                 await using (var response = cmd.ExecuteReader())
@@ -153,12 +171,13 @@ namespace Ewallet.DataAccess.Implementations
                     while (response.Read())
                     {
 
-                       // user.UserId = response.GetString(response.GetOrdinal("UserId"));
+                        user.UserId = response.GetGuid(response.GetOrdinal("UserId")).ToString();
                         user.FirstName = response.GetString(response.GetOrdinal("FirstName")).Trim();
                         user.LastName = response.GetString(response.GetOrdinal("LastName")).Trim();
                         user.Email = response.GetString(response.GetOrdinal("Email")).Trim();
                         user.password = response.GetString(response.GetOrdinal("Password")).Trim();
                         user.PhoneNumber = response.GetString(response.GetOrdinal("PhoneNumber")).Trim();
+                        user.IsActive = response.GetBoolean(response.GetOrdinal("IsActive"));
 
                     }
 
@@ -195,7 +214,7 @@ namespace Ewallet.DataAccess.Implementations
                     while (response.Read())
                     {
 
-                        //user.UserId = response.GetString(response.GetOrdinal("UserId"));
+                        user.UserId = response.GetGuid(response.GetOrdinal("UserId")).ToString();
                         user.FirstName = response.GetString(response.GetOrdinal("FirstName")).Trim();
                         user.LastName = response.GetString(response.GetOrdinal("LastName")).Trim();
                         user.Email = response.GetString(response.GetOrdinal("Email")).Trim();
@@ -236,7 +255,7 @@ namespace Ewallet.DataAccess.Implementations
                     while (response.Read())
                     {
                         UserModel user = new UserModel();
-                        //user.UserId = response.GetString(response.GetOrdinal("UserId"));
+                        user.UserId = response.GetGuid(response.GetOrdinal("UserId")).ToString();
                         user.FirstName = response.GetString(response.GetOrdinal("FirstName")).Trim();
                         user.LastName = response.GetString(response.GetOrdinal("LastName")).Trim();
                         user.Email = response.GetString(response.GetOrdinal("Email")).Trim();
@@ -268,6 +287,31 @@ namespace Ewallet.DataAccess.Implementations
             throw new NotImplementedException();
         }
 
-       
+        public async Task<int> ActivateOrDeActivateUser(bool data, string uid)
+        {
+            int response = 0;
+            string command = "UPDATE Users SET IsActive = @IsActive WHERE UserId = @UserId";
+            try
+            {
+               await using (var con= new SqlConnection(CnString))
+                {
+                    var cmd = new SqlCommand(command, con);
+                    cmd.Parameters.AddWithValue("@IsActive", data);
+                    cmd.Parameters.AddWithValue("@UserId", uid);
+                    con.Open();
+                    response = (int)cmd.ExecuteNonQuery();
+                    con.Close();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return response;
+
+        }
+
+
     }
 }

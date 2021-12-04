@@ -25,6 +25,8 @@ namespace EwalletApi.Models
         public string UserId { get; set; } 
         public List<UserRoles> Role { get; set; }
         public List<WalletModel> Wallet { get; set; }
+        public string PasswordHash { get; set; } = Guid.NewGuid().ToString();
+        public bool IsActive { get; set; } = true;
         public UserModel()
         {
             UserId = Guid.NewGuid().ToString();

@@ -30,6 +30,8 @@ namespace Ewallet.Core.Implementations
                 return "Wrong email or Password";
             if (response.password != credentials.Password.Trim())
                 return "Wrong password";
+            if (response.IsActive is false)
+                return "Deactivated Account";
             return _jwt.GenerateToken();
         }
        
@@ -37,6 +39,8 @@ namespace Ewallet.Core.Implementations
         //Registers a new user
         public async Task<string> Register(RegisterDTO details)
         {
+            
+                
             UserModel user = new UserModel();
             user.Email = details.Email;
             user.FirstName = details.FirstName;
@@ -48,21 +52,11 @@ namespace Ewallet.Core.Implementations
             var response = await UserRepository.CreateUser(user);
 
             if (response == 2)
-            {
-                return "Email exists";
-            }
-            else if (response == 3)
-            {
-                return "UserId Exists";
-            }
-            else if (response == 1)
-            {
+                return "exists";
+            
+            if (response == 1)
                 return "successful";
-            }
-            else
-            {
-                return "error";
-            }
+            return "error";
                            
         }
 
@@ -70,6 +64,14 @@ namespace Ewallet.Core.Implementations
         public void LogOut()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<string> ForgotPassword(string email)
+        {
+            var response = await UserRepository.GetUserByEmail(email);
+            if (response != null)
+                return response.password;
+            return "0";
         }
     }
 }

@@ -71,5 +71,27 @@ namespace EwalletApi.UI.Controllers
         {
             return Ok();
         }
+
+        //Activate user
+        [HttpPatch("DeactivateUser")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeactivateUser(string uid)
+        {
+            var response= await UserService.DeActivateUser(uid);
+            if (response == "error")
+                return BadRequest("Not Successful");
+            return Ok("Deactivated");
+        }
+
+        //Activate user
+        [HttpPatch("ActivateUser")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ActivateUser(string uid)
+        {
+            var response = await UserService.ReActivateUser(uid);
+            if (response == "error")
+                return BadRequest("Not Successful");
+            return Ok("Activated");
+        }
     }
 }

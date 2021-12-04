@@ -14,7 +14,7 @@ namespace Ewallet.Core.Interfaces
         Task<UserDTO> GetUserById(string uid);
         Task<string> DeleteUser(string uid);
         Task UpdateUser(string uid, UpdateUserProfileDTO data);
-        Task DeActivateUser(string uid);
-        Task ReActivateUser(string uid);
+        Task<string> DeActivateUser(string uid);
+        Task<string> ReActivateUser(string uid);
     }
 }

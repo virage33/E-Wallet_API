@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EwalletApi.Models.AccountModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,10 +8,10 @@ namespace Ewallet.DataAccess.Interfaces
 {
     public interface IWalletRepository
     {
-        Task GetAllUserWallets(string Uid);
-        Task GetIndividualUserWallet(string Uid, string walletId);
-        Task DeleteWallet(string walletId);
-        Task CreateWallet(string Uid);
+        Task<List<WalletModel>> GetAllUserWallets(string Uid);
+        Task<WalletModel> GetIndividualUserWallet(string Uid, string walletId);
+        Task<int> DeleteWallet(string walletId);
+        Task<int> CreateWallet(WalletModel Uid);
 
 
 
