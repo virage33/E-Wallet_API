@@ -78,8 +78,8 @@ namespace Ewallet.Core.Implementations
         {
             var response = await UserRepository.DeleteUser(uid);
             if (response >0)
-                return "Successful";
-            return "Error";
+                return "successful";
+            return "error";
         }
 
         public Task UpdateUser(string uid,UpdateUserProfileDTO data)
@@ -101,6 +101,12 @@ namespace Ewallet.Core.Implementations
             if (response > 0)
                 return "Activated";
             return "error";
+        }
+
+        public async Task<string> ChangeUserRole(string id, string role)
+        {
+            
+            return "successful";
         }
     }
 }

@@ -14,11 +14,13 @@ namespace Ewallet.Core.Implementations
     {
         private IUserRepository UserRepository { get; set; }
         private readonly IJwtService _jwt;
+        private readonly IWalletServices _walletService;
 
-        public AuthService(IUserRepository userRepository, IJwtService jwt)
+        public AuthService(IUserRepository userRepository, IJwtService jwt, IWalletServices walletServices)
         {
             UserRepository = userRepository;
             _jwt = jwt;
+            _walletService = walletServices;
         }
 
 
@@ -55,7 +57,13 @@ namespace Ewallet.Core.Implementations
                 return "exists";
             
             if (response == 1)
+            {
+                var res = await _walletService.CreateWallet(user.UserId, details.MainWalletCurrency);
+                if (res == "error")
+                    return "error creating wallet";
                 return "successful";
+            }
+                
             return "error";
                            
         }

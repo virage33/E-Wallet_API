@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EwalletApi.Models.AccountModels;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,14 +8,16 @@ namespace Ewallet.Core.Interfaces
 {
     public interface IWalletServices
     {
-        Task CreateWallet();
-        Task DeleteWallet();
-        Task ActivateWallet();
-        Task DeActivateWallet();
-        Task SetMainCurrency();
+        Task<string> CreateWallet(string uid, string maincurrency);
+        Task<string> DeleteWallet(string walletId);
+        Task ActivateMultipleWallets(string walletId);
+        Task<string> DeActivateMultipleWallets(string walletId);
+        Task SetMainCurrency(string currencyId);
         Task WithdrawalAccountOperations();
-        Task AddCurrency();
-        Task RemoveCurrency();
+        Task AddCurrency(string walletId);
+        Task RemoveCurrency(string currencyId);
+        Task<List<WalletModel>> GetAllUserWallets(string uid);
+        Task<WalletModel> GetWallet(string walletId);
 
     }
 }

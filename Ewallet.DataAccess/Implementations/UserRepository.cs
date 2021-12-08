@@ -1,5 +1,6 @@
 ﻿using Ewallet.DataAccess.Interfaces;
 using EwalletApi.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -11,7 +12,15 @@ namespace Ewallet.DataAccess.Implementations
     {
 
         private string CnString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\USERS\\HP\\SOURCE\\REPOS\\EWALLETAPI\\EWALLET.DB\\DB.MDF;Integrated Security = True; Connect Timeout = 30";
+        private readonly IConfiguration _config;
+        private readonly SqlConnection _conn;
 
+        public UserRepository(IConfiguration configuration)
+        {
+            _config = configuration;
+            _conn = new SqlConnection(_config.GetSection("ConnectionStrings:Default").Value);
+
+        }
 
         //Adds user to the database
         public async Task<int> CreateUser(UserModel user)
@@ -22,27 +31,26 @@ namespace Ewallet.DataAccess.Implementations
 
             try
             {
-                await using (var con = new SqlConnection(CnString))
-                {
+               
                     //checks if email already exists
-                    await using (var cmd= new SqlCommand(isEmailExist,con))
+                    await using (var cmd= new SqlCommand(isEmailExist,_conn))
                     {
-                        con.Open();
+                        _conn.Open();
                         cmd.Parameters.AddWithValue("@Email", user.Email);
                         var exist = cmd.ExecuteScalar();
                         if (exist != null)
                         {
-                            con.Close();
+                            _conn.Close();
                             return response = 2;
                         }
-                        con.Close();
+                        _conn.Close();
                     }
 
                     
                     //creates new user
-                    using (var cmd = new SqlCommand(command, con))
+                    using (var cmd = new SqlCommand(command, _conn))
                     {
-                        con.Open();
+                        _conn.Open();
                         cmd.Parameters.AddWithValue("@UserId", user.UserId);
                         cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
                         cmd.Parameters.AddWithValue("@LastName", user.LastName);
@@ -53,10 +61,10 @@ namespace Ewallet.DataAccess.Implementations
                         cmd.Parameters.AddWithValue("@IsActive", user.IsActive);
 
                         response = (int)cmd.ExecuteNonQuery();
-                        con.Close();
+                        _conn.Close();
                     }
                     
-                }
+              
             }
             catch (Exception)
             {
@@ -73,13 +81,14 @@ namespace Ewallet.DataAccess.Implementations
             var response = 0;
             try
             {
-                var con = new SqlConnection(CnString);
+              
                 
-                await using (var cmd = new SqlCommand(command, con))
+                await using (var cmd = new SqlCommand(command, _conn))
                 {
-                    con.Open();
+                    _conn.Open();
                     cmd.Parameters.AddWithValue("@UserId", Uid);
                     response = (int)cmd.ExecuteNonQuery();
+                    _conn.Close();
                 }
             }
             catch (Exception)
@@ -99,11 +108,11 @@ namespace Ewallet.DataAccess.Implementations
 
             try
             {
-                var con = new SqlConnection(CnString);
+             
 
-                var cmd = new SqlCommand(command, con);
+                var cmd = new SqlCommand(command, _conn);
                     
-                con.Open();
+                _conn.Open();
 
                 await using (var response = cmd.ExecuteReader())
                 {
@@ -111,7 +120,6 @@ namespace Ewallet.DataAccess.Implementations
                     while (response.Read())
                     {
                         UserModel user = new UserModel();
-
                         //var data = response.GetString(response.GetOrdinal("UserId"));
                         user.FirstName = response.GetString(response.GetOrdinal("FirstName")).Trim();
                         user.LastName = response.GetString(response.GetOrdinal("LastName")).Trim();
@@ -122,7 +130,7 @@ namespace Ewallet.DataAccess.Implementations
                     }
 
                 }
-                con.Close();
+                _conn.Close();
 
 
             }
@@ -146,24 +154,24 @@ namespace Ewallet.DataAccess.Implementations
 
             try
             {
-                var con = new SqlConnection(CnString);
+               
 
-                var cmd = new SqlCommand(command, con);
+                var cmd = new SqlCommand(command, _conn);
                 cmd.Parameters.AddWithValue("@Email", email);
                 //checks if email already exists
-                await using (var cmd1 = new SqlCommand(isEmailExist, con))
+                await using (var cmd1 = new SqlCommand(isEmailExist, _conn))
                 {
-                    con.Open();
+                    _conn.Open();
                     cmd1.Parameters.AddWithValue("@Email", email);
                     var exist = cmd1.ExecuteScalar();
                     if (exist == null)
                     {
-                        con.Close();
+                        _conn.Close();
                         return null;
                     }
-                    con.Close();
+                    _conn.Close();
                 }
-                con.Open();
+                _conn.Open();
 
                 await using (var response = cmd.ExecuteReader())
                 {
@@ -171,7 +179,7 @@ namespace Ewallet.DataAccess.Implementations
                     while (response.Read())
                     {
 
-                        user.UserId = response.GetGuid(response.GetOrdinal("UserId")).ToString();
+                        user.UserId = response.GetString(response.GetOrdinal("UserId")).ToString();
                         user.FirstName = response.GetString(response.GetOrdinal("FirstName")).Trim();
                         user.LastName = response.GetString(response.GetOrdinal("LastName")).Trim();
                         user.Email = response.GetString(response.GetOrdinal("Email")).Trim();
@@ -183,7 +191,7 @@ namespace Ewallet.DataAccess.Implementations
 
                 }
 
-                con.Close();
+                _conn.Close();
 
             }
             catch (Exception)
@@ -202,11 +210,9 @@ namespace Ewallet.DataAccess.Implementations
 
             try
             {
-                var con = new SqlConnection(CnString);
-
-                var cmd = new SqlCommand(command, con);
+                var cmd = new SqlCommand(command, _conn);
                 cmd.Parameters.AddWithValue("@UserId", Uid);
-                con.Open();
+                _conn.Open();
 
                 await using (var response = cmd.ExecuteReader())
                 {
@@ -214,7 +220,7 @@ namespace Ewallet.DataAccess.Implementations
                     while (response.Read())
                     {
 
-                        user.UserId = response.GetGuid(response.GetOrdinal("UserId")).ToString();
+                        user.UserId = response.GetString(response.GetOrdinal("UserId"));
                         user.FirstName = response.GetString(response.GetOrdinal("FirstName")).Trim();
                         user.LastName = response.GetString(response.GetOrdinal("LastName")).Trim();
                         user.Email = response.GetString(response.GetOrdinal("Email")).Trim();
@@ -224,7 +230,7 @@ namespace Ewallet.DataAccess.Implementations
                     }
 
                 }
-                con.Close();
+                _conn.Close();
 
 
             }
@@ -236,6 +242,9 @@ namespace Ewallet.DataAccess.Implementations
             return user;
         }
 
+
+
+        //get users by name
         public async Task<List<UserModel>> GetUserByName(string username)
         {
             string command = "SELECT * FROM Users WHERE FirstName LIKE @Name OR LastName LIKE @Name";
@@ -243,20 +252,18 @@ namespace Ewallet.DataAccess.Implementations
 
             try
             {
-                var con = new SqlConnection(CnString);
-
-                var cmd = new SqlCommand(command, con);
+                var cmd = new SqlCommand(command, _conn);
                 cmd.Parameters.AddWithValue("@Name", username+"%");
-                con.Open();
+                _conn.Open();
 
-                await using (var response = cmd.ExecuteReader())
+                using (var response = await cmd.ExecuteReaderAsync())
                 {
                  
                     while (response.Read())
                     {
                         UserModel user = new UserModel();
-                        user.UserId = response.GetGuid(response.GetOrdinal("UserId")).ToString();
-                        user.FirstName = response.GetString(response.GetOrdinal("FirstName")).Trim();
+                        user.UserId = response.GetString(response.GetOrdinal("UserId"));
+                        user.FirstName = response["FirstName"].ToString().Trim();
                         user.LastName = response.GetString(response.GetOrdinal("LastName")).Trim();
                         user.Email = response.GetString(response.GetOrdinal("Email")).Trim();
                         user.password = response.GetString(response.GetOrdinal("Password")).Trim();
@@ -265,7 +272,7 @@ namespace Ewallet.DataAccess.Implementations
                     }
 
                 }
-                con.Close();
+                _conn.Close();
 
 
             }
@@ -277,6 +284,9 @@ namespace Ewallet.DataAccess.Implementations
             return result;
         }
 
+
+
+        //get users by role
         public Task<List<UserModel>> GetUsersByRole(string Role)
         {
             throw new NotImplementedException();
@@ -287,20 +297,48 @@ namespace Ewallet.DataAccess.Implementations
             throw new NotImplementedException();
         }
 
+
+        //Activate or Deactivate User
         public async Task<int> ActivateOrDeActivateUser(bool data, string uid)
         {
             int response = 0;
             string command = "UPDATE Users SET IsActive = @IsActive WHERE UserId = @UserId";
             try
             {
-               await using (var con= new SqlConnection(CnString))
+               await using (_conn)
                 {
-                    var cmd = new SqlCommand(command, con);
+                    var cmd = new SqlCommand(command, _conn);
                     cmd.Parameters.AddWithValue("@IsActive", data);
                     cmd.Parameters.AddWithValue("@UserId", uid);
-                    con.Open();
+                    _conn.Open();
                     response = (int)cmd.ExecuteNonQuery();
-                    con.Close();
+                    _conn.Close();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return response;
+
+        }
+
+        
+        public async Task<int> ChangeUserRole(string uid, string role)
+        {
+            int response = 0;
+            string command = "UPDATE Users SET IsActive = @IsActive WHERE UserId = @UserId";
+            try
+            {
+                await using (_conn)
+                {
+                    var cmd = new SqlCommand(command, _conn);
+                    cmd.Parameters.AddWithValue("@IsActive", @role);
+                    cmd.Parameters.AddWithValue("@UserId", uid);
+                    _conn.Open();
+                    response = (int)cmd.ExecuteNonQuery();
+                    _conn.Close();
                 }
             }
             catch (Exception)

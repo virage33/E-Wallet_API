@@ -13,7 +13,7 @@ namespace EwalletApi.UI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+     
     public class UserController : ControllerBase
     {
         private IUserService UserService { get; set; }
@@ -23,9 +23,9 @@ namespace EwalletApi.UI.Controllers
         }
 
 
-        // GETs all user non-sensitive data
+        // GETs all users
         [HttpGet("GetAllUsers")]
-       // [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IEnumerable<UserDTO>> Get()
         {
             var result = await UserService.GetAllUsers();
@@ -34,10 +34,11 @@ namespace EwalletApi.UI.Controllers
 
         // GET personal user profile
         [HttpGet("GetProfile/{id}")]
-        [Authorize(Roles = "Noob , Elite , Admin")]
+       // [Authorize(Roles = "Noob , Elite , Admin")]
         public async Task<IActionResult> GetProfile(string id)
         {
-            return Ok();
+            var result = await UserService.GetUserById(id);
+            return Ok(result);
         }
 
         [HttpGet("GetUsersByName")]
@@ -61,7 +62,10 @@ namespace EwalletApi.UI.Controllers
         [Authorize(Roles = "Noob, Elite, Admin")]
         public async Task<IActionResult> DeleteUserAccount(string id)
         {
-            return Ok();
+            var response = await UserService.DeleteUser(id);
+            if(response == "error") 
+                return BadRequest("unsuccessful");
+            return Ok("Deleted!");
         }
 
         //Upgrades and downgrades a user
@@ -69,6 +73,7 @@ namespace EwalletApi.UI.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> ChangeUserRole(string id)
         {
+           
             return Ok();
         }
 

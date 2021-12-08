@@ -52,7 +52,7 @@ namespace EwalletApi.UI.Controllers
             if (existing == "exists")
                 return Conflict("User Exists!");
 
-            return Ok();
+            return Ok("successful");
         }
 
         [HttpPost("Forgot Password")]

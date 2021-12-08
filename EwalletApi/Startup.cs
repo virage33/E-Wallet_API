@@ -29,11 +29,16 @@ namespace EwalletApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //auth
             services.AddScoped<IJwtService, JwtService>();
-            
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ITransactionRepository, TransactionsRepository>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
+            //wallet
+            services.AddScoped<IWalletRepository, WalletRepository>();
+            services.AddScoped<IWalletServices, WalletService>();
+            //transactions
+            services.AddScoped<ITransactionRepository, TransactionsRepository>();
+            
 
 
             services.AddScoped<IUserRepository, UserRepository>();

@@ -9,9 +9,9 @@ namespace Ewallet.DataAccess.Interfaces
     public interface IWalletRepository
     {
         Task<List<WalletModel>> GetAllUserWallets(string Uid);
-        Task<WalletModel> GetIndividualUserWallet(string Uid, string walletId);
+        Task<WalletModel> GetIndividualUserWallet(string walletId);
         Task<int> DeleteWallet(string walletId);
-        Task<int> CreateWallet(WalletModel Uid);
+        Task<int> CreateWallet(WalletModel Uid, string uid);
 
 
 
