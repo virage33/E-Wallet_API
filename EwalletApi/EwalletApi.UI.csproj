@@ -9,4 +9,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ewallet.Core\Ewallet.Core.csproj" />
+    <ProjectReference Include="..\Ewallet.DataAccess\Ewallet.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using EwalletApi.UI.DTO.WalletDTO;
+﻿
+using Ewallet.Core.DTO.WalletDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,7 +14,7 @@ namespace EwalletApi.UI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    [Authorize(Roles = "Noob, Elite")]
+    [Authorize(Roles = "noob, elite")]
     public class TransactionController : ControllerBase
     {
         
@@ -39,7 +40,7 @@ namespace EwalletApi.UI.Controllers
 
 
         [HttpPost("FundWallet")]
-        [Authorize(Roles = "Noob , Elite, Admin")]
+        [Authorize(Roles = "noob , elite, admin")]
         public IActionResult FundWallet([FromBody] FundWalletDTO details)
         {
             return Ok();

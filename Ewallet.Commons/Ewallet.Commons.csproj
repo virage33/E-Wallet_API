@@ -4,4 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="4.0.20505" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ewallet.Models\Ewallet.Models.csproj" />
+  </ItemGroup>
+
 </Project>

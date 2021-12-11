@@ -5,8 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="AuthService\Implementations\" />
     <Folder Include="WalletService\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ewallet.Commons\Ewallet.Commons.csproj" />
+    <ProjectReference Include="..\Ewallet.DataAccess\Ewallet.DataAccess.csproj" />
+    <ProjectReference Include="..\Ewallet.Models\Ewallet.Models.csproj" />
   </ItemGroup>
 
 </Project>

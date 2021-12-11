@@ -1,18 +1,19 @@
-﻿using System;
+﻿using Ewallet.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EwalletApi.Models.AccountModels
 {
-    public class WalletModel
+    public class WalletModel:BaseEntity
     {
-        public string Id { get; set; }
-        public string Address { get; }
-        public Currency MainCurrency { get; set; } 
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string MainCurrency { get; set; } 
         public List< Currency> Currency { get; set; }
         public decimal WalletBalance { get; set;}
         public List<Transactions> Transactions { get; set; }
+        public string UserId { get; set; }
         public UserModel User { get; set; }
 
         public WalletModel()

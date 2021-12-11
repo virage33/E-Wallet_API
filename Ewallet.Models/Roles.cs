@@ -9,7 +9,11 @@ namespace Ewallet.Models
     {
         public string Id { get; set;}
         public string Role { get; set;}
+        public List<UserRoles> Users { get; set; }
 
-        public UserModel user { get; set; }
+        public Roles()
+        {
+            Users = new List<UserRoles>();
+        }
     }
 }

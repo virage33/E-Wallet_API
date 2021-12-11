@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Ewallet.Core.DTO;
+using Ewallet.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,22 +13,30 @@ namespace EwalletApi.UI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class CurrencyConverterController : ControllerBase
     {
-        // GET: api/<CurrencyConverterController>
-        [HttpGet("Result")]
-        public IActionResult Result()
+        private readonly ICurrencyConversionService _conversionService;
+        public CurrencyConverterController(ICurrencyConversionService conversionService)
         {
-            return Ok();
+            _conversionService = conversionService;
+        }
+
+        // GET: api/<CurrencyConverterController>
+        [HttpGet("CurrentMarketPrices")]
+        public async Task<IActionResult> CurrentMarketPrices()
+        {
+            var response = await _conversionService.GetMarketPrices();
+            return Ok(response);
         }
 
       
         // POST api/<CurrencyConverterController>
-        [HttpPost("Convert")]
-        public IActionResult CurrencyToConvert([FromBody] int value)
+        [HttpPost("ConversionRate")]
+        public async Task<IActionResult> ConversionRate([FromBody] CurrencyConverterDTO data)
         {
-            return Ok();
+            var response = await _conversionService.ConvertCurrency(data);
+            return Ok(response);
         }
 
     }
