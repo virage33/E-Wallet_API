@@ -49,7 +49,7 @@ namespace Ewallet.DataAccess.Implementations
             {
                 cmd.Parameters.AddWithValue("@walletId", walletId);
                 _conn.Open();
-                response = cmd.ExecuteNonQuery();
+                response = await cmd.ExecuteNonQueryAsync();
                 _conn.Close();
             }
             return response;
@@ -61,20 +61,35 @@ namespace Ewallet.DataAccess.Implementations
             
             string command = "SELECT * FROM Wallet WHERE UserId = @Uid";
             var cmd = new SqlCommand(command, _conn);
-            cmd.Parameters.AddWithValue("@Uid", Uid);
-            _conn.Open();
-            await using (var response=cmd.ExecuteReader())
-            {
-                while (response.Read())
+            try
+            {     
+                cmd.Parameters.AddWithValue("@Uid", Uid);
+                _conn.Open();
+                await using (var response=cmd.ExecuteReader())
                 {
-                    WalletModel wallet = new WalletModel();
-                    wallet.Id = response.GetGuid(response.GetOrdinal("WalletId")).ToString().Trim();
-                    wallet.WalletBalance = response.GetDecimal(response.GetOrdinal("WalletBalance"));
-                    wallet.UserId = response.GetString(response.GetOrdinal("UserId"));
-                    result.Add(wallet);
+                    if (response != null)
+                    {
+                        while (response.Read())
+                        {
+                            WalletModel wallet = new WalletModel();
+                            wallet.Id = response.GetString(response.GetOrdinal("WalletId")).ToString().Trim();
+                            wallet.WalletBalance = response.GetDecimal(response.GetOrdinal("WalletBalance"));
+                            wallet.UserId = response.GetString(response.GetOrdinal("UserId")).Trim();
+                            result.Add(wallet);
+                        }
+                    }
                 }
             }
-            _conn.Close();
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            
             return result;
         }
 
@@ -83,20 +98,34 @@ namespace Ewallet.DataAccess.Implementations
             WalletModel result = new WalletModel();
             string command = "SELECT * FROM Wallet WHERE WalletId=@WalletId";
             var cmd = new SqlCommand(command, _conn);
-            
-            cmd.Parameters.AddWithValue("@WalletId", walletId);
+            try
+            {           
+                cmd.Parameters.AddWithValue("@WalletId", walletId);
 
-            _conn.Open();
-            await using (var response = cmd.ExecuteReader())
-            {
-                while (response.Read())
-                {             
-                    result.Id = response.GetGuid(response.GetOrdinal("WalletId")).ToString().Trim();
-                    result.WalletBalance = response.GetDecimal(response.GetOrdinal("WalletBalance"));
-                   
+                _conn.Open();
+                await using (var response = cmd.ExecuteReader())
+                {
+                    if (response != null)
+                    {
+                        while (response.Read())
+                        {
+                            result.Id = response.GetString(response.GetOrdinal("WalletId")).ToString().Trim();
+                            result.WalletBalance = response.GetDecimal(response.GetOrdinal("WalletBalance"));
+
+                        }
+                    }
                 }
             }
-            _conn.Close();
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            
             return result;
         }
     }

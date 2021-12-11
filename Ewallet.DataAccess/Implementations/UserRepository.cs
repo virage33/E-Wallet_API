@@ -11,7 +11,6 @@ namespace Ewallet.DataAccess.Implementations
     public class UserRepository : IUserRepository
     {
 
-        private string CnString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\USERS\\HP\\SOURCE\\REPOS\\EWALLETAPI\\EWALLET.DB\\DB.MDF;Integrated Security = True; Connect Timeout = 30";
         private readonly IConfiguration _config;
         private readonly SqlConnection _conn;
 
@@ -23,47 +22,52 @@ namespace Ewallet.DataAccess.Implementations
         }
 
         //Adds user to the database
-        public async Task<int> CreateUser(UserModel user)
+        public async Task<int> CreateUser(UserModel user, string role)
         {
-            string command = "INSERT INTO Users Values(@UserId,@FirstName,@LastName,@Email,@Password,@PhoneNumber,@PasswordHash,@IsActive)";
+            string command = "INSERT INTO Users Values(@UserId,@FirstName,@LastName,@Email,@Password,@PhoneNumber,@PasswordHash,@IsActive,@DateCreated,@LastModified)";
             string isEmailExist = "Select Email from USERS WHERE Email = @Email";
             int response = 0;
 
             try
             {
                
-                    //checks if email already exists
-                    await using (var cmd= new SqlCommand(isEmailExist,_conn))
+                //checks if email already exists
+                await using (var cmd= new SqlCommand(isEmailExist,_conn))
+                {
+                    _conn.Open();
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    var exist = cmd.ExecuteScalar();
+                    if (exist != null)
                     {
-                        _conn.Open();
-                        cmd.Parameters.AddWithValue("@Email", user.Email);
-                        var exist = cmd.ExecuteScalar();
-                        if (exist != null)
-                        {
-                            _conn.Close();
-                            return response = 2;
-                        }
                         _conn.Close();
+                        return response = 2;
                     }
+                    _conn.Close();
+                }
 
                     
                     //creates new user
-                    using (var cmd = new SqlCommand(command, _conn))
-                    {
-                        _conn.Open();
-                        cmd.Parameters.AddWithValue("@UserId", user.UserId);
-                        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
-                        cmd.Parameters.AddWithValue("@LastName", user.LastName);
-                        cmd.Parameters.AddWithValue("@Email", user.Email);
-                        cmd.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
-                        cmd.Parameters.AddWithValue("@Password", user.password);
-                        cmd.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
-                        cmd.Parameters.AddWithValue("@IsActive", user.IsActive);
+                using (var cmd = new SqlCommand(command, _conn))
+                {
+                    _conn.Open();
+                    cmd.Parameters.AddWithValue("@UserId", user.UserId);
+                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    cmd.Parameters.AddWithValue("@LastName", user.LastName);
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    cmd.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
+                    cmd.Parameters.AddWithValue("@Password", user.password);
+                    cmd.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
+                    cmd.Parameters.AddWithValue("@IsActive", user.IsActive);
+                    cmd.Parameters.AddWithValue("@DateCreated", user.Created);
+                    cmd.Parameters.AddWithValue("@LastModified", user.LastModified);
 
-                        response = (int)cmd.ExecuteNonQuery();
-                        _conn.Close();
-                    }
-                    
+                    response = (int)cmd.ExecuteNonQuery();
+                    _conn.Close();
+                }
+                if (response > 0)
+                {
+                    await UserRole(role, user.UserId);
+                }
               
             }
             catch (Exception)
@@ -350,6 +354,84 @@ namespace Ewallet.DataAccess.Implementations
 
         }
 
+        public async Task<List<string>> GetUserRoles(string userId)
+        {
+            List<string> roles = new List<string>();
+            string command = "SELECT * FROM UserRoles JOIN Roles ON UserRoles.RoleId = Roles.Id WHERE UserId=@userId";
+            try
+            {
+                var cmd = new SqlCommand(command, _conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+                _conn.Open();
+                using (var response = await cmd.ExecuteReaderAsync())
+                {
+                    if (response != null)
+                    {
+                        while (response.Read())
+                        {
+                            roles.Add(response["Roles"].ToString().ToLower().Trim());
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
 
+                throw;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            return roles;
+        }
+
+        public async Task<int> UserRole(string role,string userId)
+        {
+            string cmd1 = "SELECT Id FROM Roles WHERE Roles = @role";
+            string command = "INSERT INTO UserRoles Values(@RoleId,@UserId)";
+            var roleId = "";
+            var response2 = 0;
+            try
+            {
+
+            
+                using (var cmd = new SqlCommand(cmd1, _conn))
+                {
+                    cmd.Parameters.AddWithValue("@role", role.ToLower());
+                    _conn.Open();
+                    var response = await cmd.ExecuteReaderAsync();
+                    while (response.Read())
+                    {
+                        roleId = response["Id"].ToString().Trim();
+                    }
+
+                    _conn.Close();
+                }
+
+                if (String.IsNullOrWhiteSpace(roleId))
+                    return 2;
+
+                await using (var cmd = new SqlCommand(command, _conn))
+                {
+                    cmd.Parameters.AddWithValue("@RoleId", roleId);
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+               
+                    _conn.Open();
+                    response2 = await cmd.ExecuteNonQueryAsync();
+
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            return response2;
+        }
     }
 }

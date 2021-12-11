@@ -14,8 +14,8 @@ namespace Ewallet.Core.Interfaces
         Task<string> DeActivateMultipleWallets(string walletId);
         Task SetMainCurrency(string currencyId);
         Task WithdrawalAccountOperations();
-        Task AddCurrency(string walletId);
-        Task RemoveCurrency(string currencyId);
+        Task<string> AddCurrency(string walletId, string currencyCode, bool isMain = false);
+        Task<bool> RemoveCurrency(string currencyId);
         Task<List<WalletModel>> GetAllUserWallets(string uid);
         Task<WalletModel> GetWallet(string walletId);
 

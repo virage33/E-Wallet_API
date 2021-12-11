@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EwalletApi.Models
 {
-    public class UserModel
+    public class UserModel:BaseEntity
     {
         [Required]
         public string FirstName { get; set; }
@@ -25,7 +25,7 @@ namespace EwalletApi.Models
         public string UserId { get; set; } 
         public List<UserRoles> Role { get; set; }
         public List<WalletModel> Wallet { get; set; }
-        public string PasswordHash { get; set; } = Guid.NewGuid().ToString();
+        public string PasswordHash { get; set; }
         public bool IsActive { get; set; } = true;
         public UserModel()
         {

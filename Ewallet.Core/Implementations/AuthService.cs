@@ -27,6 +27,7 @@ namespace Ewallet.Core.Implementations
         //Logs in the user and calls the jwt key generator
         public async Task<string> Login(LoginDTO credentials)
         {
+            List<string> ro = new List<string>() { "noob","elite" };
             var response = await UserRepository.GetUserByEmail(credentials.Email);
             if (response == null)
                 return "Wrong email or Password";
@@ -34,7 +35,10 @@ namespace Ewallet.Core.Implementations
                 return "Wrong password";
             if (response.IsActive is false)
                 return "Deactivated Account";
-            return _jwt.GenerateToken();
+            var roles = await UserRepository.GetUserRoles(response.UserId);
+            if (roles.Count <1)
+                return "user has no role";
+            return _jwt.GenerateToken(response, roles);
         }
        
 
@@ -49,9 +53,12 @@ namespace Ewallet.Core.Implementations
             user.LastName = details.LastName;
             user.password = details.Password;
             user.PhoneNumber = details.PhoneNumber;
+            user.PasswordHash = "hash";
+            user.LastModified = DateTime.Now;
+            
                    
             //if response is 1 send email...
-            var response = await UserRepository.CreateUser(user);
+            var response = await UserRepository.CreateUser(user, details.Role);
 
             if (response == 2)
                 return "exists";

@@ -1,4 +1,5 @@
 ﻿using Ewallet.Core.JWT.Interfaces;
+using EwalletApi.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -16,16 +17,24 @@ namespace Ewallet.Core.JWT.Implementations
         {
             configuration = _configuration;
         }
-        public string GenerateToken()
+        public string GenerateToken(UserModel user, List<string>roles)
         {
+            //add claims
             var claims = new List<Claim>();
-            var claim = new Claim(type: ClaimTypes.NameIdentifier, value: "MyClaim");
-            var adminClaim = new Claim(type: "role", value: "admin");
+            var claim = new Claim(type: ClaimTypes.Name, $"{user.FirstName}{user.LastName}");
             claims.Add(claim);
-            claims.Add(adminClaim);
 
+            //add roles to claims
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+                    
+            
+            //set secret key
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTKey"]));
 
+            //define security token descriptor
             var tokenDiscriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -33,6 +42,7 @@ namespace Ewallet.Core.JWT.Implementations
                 Expires = DateTime.Now.AddDays(1)
             };
 
+            //create token
             var handler = new JwtSecurityTokenHandler();
             var token = handler.CreateToken(tokenDiscriptor);
             var t = handler.WriteToken(token);

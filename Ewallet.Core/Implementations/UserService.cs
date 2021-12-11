@@ -22,6 +22,7 @@ namespace Ewallet.Core.Implementations
             var response = await UserRepository.GetAllUsers();
             response.ForEach((x) => {
                 UserDTO user=new UserDTO();
+                user.uid = x.UserId;
                 user.FirstName = x.FirstName;
                 user.LastName = x.LastName;
                 user.Email = x.Email;
@@ -40,6 +41,7 @@ namespace Ewallet.Core.Implementations
             {
                 response.ForEach((x) => {
                     UserDTO user = new UserDTO();
+                    user.uid = x.UserId;
                     user.FirstName = x.FirstName;
                     user.LastName = x.LastName;
                     user.PhoneNumber = x.PhoneNumber;
@@ -64,6 +66,7 @@ namespace Ewallet.Core.Implementations
             var response = await UserRepository.GetUserById(uid);
             if (response != null)
             {
+                result.uid = response.UserId;
                 result.Email = response.Email;
                 result.FirstName = response.FirstName;
                 result.LastName = response.LastName;

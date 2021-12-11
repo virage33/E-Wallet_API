@@ -8,12 +8,11 @@ namespace Ewallet.DataAccess.Interfaces
 {
     public interface ICurrencyRepository
     {
-        Task CreateCurrency(Currency data);
-        Task DeleteCurrency(string Id);
-        Task GetCurrency(string Id);
-        Task GetAllCurrencies();
-        Task DepositFunds(string currencyId, decimal amount);
-        Task WithDraw(string currencyId, decimal amount);
-
+        Task<int> CreateCurrency(Currency data);
+        Task<int> DeleteCurrency(string Id);
+        Task<Currency> GetCurrency(string currencyId);
+        Task<IEnumerable<Currency>> GetAllCurrencies(string walletId);
+        Task<int> DepositOrWithdraw(string currencyId, decimal newBalance);
+       
     }
 }

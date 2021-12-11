@@ -25,7 +25,7 @@ namespace EwalletApi.UI.Controllers
 
         // GETs all users
         [HttpGet("GetAllUsers")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IEnumerable<UserDTO>> Get()
         {
             var result = await UserService.GetAllUsers();
@@ -34,7 +34,7 @@ namespace EwalletApi.UI.Controllers
 
         // GET personal user profile
         [HttpGet("GetProfile/{id}")]
-       // [Authorize(Roles = "Noob , Elite , Admin")]
+        [Authorize(Roles = "noob , elite , admin")]
         public async Task<IActionResult> GetProfile(string id)
         {
             var result = await UserService.GetUserById(id);
@@ -42,7 +42,7 @@ namespace EwalletApi.UI.Controllers
         }
 
         [HttpGet("GetUsersByName")]
-        // [Authorize(Roles = "Admin")]
+         [Authorize(Roles = "admin")]
         public async Task<IEnumerable<UserDTO>> GetUsersByName(string name)
         {
             var result = await UserService.GetUsersByName(name);           
@@ -51,7 +51,7 @@ namespace EwalletApi.UI.Controllers
 
         //updates user profile
         [HttpPatch("UpdateUserProfile/{id}")]
-       [Authorize(Roles = "Noob , Elite , Admin")]
+       [Authorize(Roles = "noob , elite , admin")]
         public async Task<IActionResult> UpdateUserProfile(int id, [FromBody] string value)
         {
             return Ok();
@@ -59,7 +59,7 @@ namespace EwalletApi.UI.Controllers
 
         // DELETE personal user account
         [HttpDelete("DeleteUser/{id}")]
-        [Authorize(Roles = "Noob, Elite, Admin")]
+        [Authorize(Roles = "noob, elite, admin")]
         public async Task<IActionResult> DeleteUserAccount(string id)
         {
             var response = await UserService.DeleteUser(id);
@@ -79,7 +79,7 @@ namespace EwalletApi.UI.Controllers
 
         //Activate user
         [HttpPatch("DeactivateUser")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeactivateUser(string uid)
         {
             var response= await UserService.DeActivateUser(uid);
@@ -90,7 +90,7 @@ namespace EwalletApi.UI.Controllers
 
         //Activate user
         [HttpPatch("ActivateUser")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> ActivateUser(string uid)
         {
             var response = await UserService.ReActivateUser(uid);

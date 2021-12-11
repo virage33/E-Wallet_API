@@ -36,13 +36,20 @@ namespace EwalletApi
             //wallet
             services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<IWalletServices, WalletService>();
+            //Currency
+            services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+            services.AddScoped<ICurrencyService, CurrencyService>();
             //transactions
             services.AddScoped<ITransactionRepository, TransactionsRepository>();
+            //currency converter
+            services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
             
 
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
+
+            services.AddMvc().AddNewtonsoftJson();
 
             services.AddControllers();
             services.AddAuthentication(option =>

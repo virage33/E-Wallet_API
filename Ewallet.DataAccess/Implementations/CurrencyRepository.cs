@@ -1,5 +1,6 @@
 ﻿using Ewallet.DataAccess.Interfaces;
 using EwalletApi.Models.AccountModels;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -10,45 +11,203 @@ namespace Ewallet.DataAccess.Implementations
 {
     public class CurrencyRepository : ICurrencyRepository
     {
-
-        private string CnString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\USERS\\HP\\SOURCE\\REPOS\\EWALLETAPI\\EWALLET.DB\\DB.MDF;Integrated Security = True; Connect Timeout = 30";
+        private readonly IConfiguration _config;
+        private readonly SqlConnection _conn;
         
-        public Task CreateCurrency(Currency data)
+        public CurrencyRepository(IConfiguration configuration)
         {
-            string command = "INSERT INTO Currency Values(@CurrencyId, @CurrencyType, @ShortCode,@balance,@WalletId)";
-            var con = new SqlConnection(CnString);
-            using (var cmd = new SqlCommand(command,con))
+            _config = configuration;
+            _conn = new SqlConnection(_config.GetSection("ConnectionStrings:Default").Value);
+        }
+
+
+        public async Task<int> CreateCurrency(Currency data)
+        {
+            string command = "INSERT INTO WalletCurrency Values(@Id,@WalletId,@CurrencyId,@balance,@IsMain)";
+            string cmd1 = "SELECT CurrencyId FROM Currency WHERE CurrencyShortCode = @shortcode";
+            string currencyId = "";
+            var response2 = 0;
+            try
             {
-                cmd.Parameters.AddWithValue("@CurrencyId", data.Id);
-                cmd.Parameters.AddWithValue("@CurrencyType", data.Type);
-                cmd.Parameters.AddWithValue("@ShortCode", data.Code);
+
+            
+            using (var cmd = new SqlCommand(cmd1, _conn))
+            {
+                cmd.Parameters.AddWithValue("@shortcode", data.Code);
+                _conn.Open();
+                var response = await cmd.ExecuteReaderAsync();
+                while (response.Read())
+                {
+                    currencyId = response["CurrencyId"].ToString();
+                }
+                
+                _conn.Close();
             }
-            return Task.CompletedTask;
+
+            if (String.IsNullOrWhiteSpace(currencyId))
+                return 2;
+            
+                await using (var cmd = new SqlCommand(command,_conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", data.Id);
+                cmd.Parameters.AddWithValue("@CurrencyId", currencyId);
+                cmd.Parameters.AddWithValue("@WalletId", data.WalletId);
+                cmd.Parameters.AddWithValue("@balance", data.Balance);
+                cmd.Parameters.AddWithValue("@IsMain", data.IsMain);
+                _conn.Open();
+                response2 = await cmd.ExecuteNonQueryAsync();
+                
+            }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            return response2;
         }
 
-        public Task DeleteCurrency(string Id)
+        public async Task<int> DeleteCurrency(string Id)
         {
-            throw new NotImplementedException();
+            string command = "DELETE FROM WalletCurrency WHERE Id = @Id";
+            var response = 0;
+            try
+            {
+                using (var cmd = new SqlCommand(command, _conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", Id);
+                    _conn.Open();
+                    response = await cmd.ExecuteNonQueryAsync();
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            
+            return response;
         }
 
-        public Task DepositFunds(string currencyId, decimal amount)
+        public async Task<int> DepositOrWithdraw(string currencyId, decimal newbalance)
         {
-            throw new NotImplementedException();
+            string command = "UPDATE WalletCurrency SET CurrencyBalance = @balance WHERE Id = @currencyId";
+            var response = 0;
+            try
+            {
+                using (var cmd = new SqlCommand(command,_conn))
+                {
+                    cmd.Parameters.AddWithValue("@balance",newbalance);
+                    cmd.Parameters.AddWithValue("@currencyId", currencyId);
+                    _conn.Open();
+                    response = await cmd.ExecuteNonQueryAsync();
+                }   
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _conn.Close();   
+            }
+            return response;
         }
 
-        public Task GetAllCurrencies()
+        public async Task<IEnumerable<Currency>> GetAllCurrencies(string walletId)
         {
-            throw new NotImplementedException();
+            List<Currency> result = new List<Currency>();
+            
+            string command = "SELECT * FROM WalletCurrency JOIN Currency ON WalletCurrency.CurrencyId=Currency.CurrencyId WHERE WalletId = @walletId";
+            try
+            {
+
+                var cmd = new SqlCommand(command, _conn);
+                cmd.Parameters.AddWithValue("@walletId", walletId);
+                _conn.Open();
+                using (var response = await cmd.ExecuteReaderAsync())
+                {
+                    if (response != null)
+                    {
+                        while (response.Read())
+                        {
+                            result.Add(
+                            new Currency
+                            {
+                                Balance = response.GetDecimal(response.GetOrdinal("CurrencyBalance")),
+                                WalletId = response.GetString(response.GetOrdinal("WalletId")).Trim(),
+                                IsMain = response.GetBoolean(response.GetOrdinal("IsMain")),
+                                Id = response.GetString(response.GetOrdinal("Id")).Trim(),
+                                Code = response.GetString(response.GetOrdinal("CurrencyShortCode")).Trim(),
+                                Type = response.GetString(response.GetOrdinal("CurrencyType")).Trim()
+                            }
+                            );
+                        }
+                    }
+                    
+                 }
+                
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            return result;
         }
 
-        public Task GetCurrency(string Id)
+        public async Task<Currency> GetCurrency(string currencyId)
         {
-            throw new NotImplementedException();
+            Currency currency = new Currency();
+            string command = "SELECT * FROM WalletCurrency JOIN Currency ON WalletCurrency.CurrencyId=Currency.CurrencyId WHERE Id = @currencyId";
+            
+
+            try
+            {
+                var cmd = new SqlCommand(command, _conn);
+                cmd.Parameters.AddWithValue("@currencyId", currencyId);
+                _conn.Open();
+                using (var response = await cmd.ExecuteReaderAsync())
+                {
+                    if (response!=null)
+                    {
+                        while (response.Read())
+                        {
+                            currency.Balance = response.GetDecimal(response.GetOrdinal("CurrencyBalance"));
+                            currency.WalletId = response.GetString(response.GetOrdinal("WalletId")).Trim();
+                            currency.IsMain = response.GetBoolean(response.GetOrdinal("IsMain"));
+                            currency.Id = response.GetString(response.GetOrdinal("Id")).Trim();
+                            currency.Code = response.GetString(response.GetOrdinal("CurrencyShortCode")).Trim();
+                            currency.Type = response.GetString(response.GetOrdinal("CurrencyType")).Trim();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            finally
+            {
+                _conn.Close();
+            }
+            return currency;
         }
 
-        public Task WithDraw(string currencyId, decimal amount)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

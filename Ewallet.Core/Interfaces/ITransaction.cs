@@ -11,6 +11,9 @@ namespace Ewallet.Core.Interfaces
         Task RegisterTransaction();
         Task CreditTransactions();
         Task DebitTransactions();
+        Task DeleteTransaction();
+        Task<bool> Deposit(string currencyId, decimal amount);
+        Task<bool> Withdraw(string currencyId, string currencyID);
 
     }
 }

@@ -8,7 +8,7 @@ namespace Ewallet.DataAccess.Interfaces
 {
     public interface ITransactionRepository
     {
-        Task SetMainCurrency(string Uid,string walletId);
+       
         Task WithdrawFunds(Transactions Withdrawal);
         Task DepositFunds(Transactions Deposit);
     }

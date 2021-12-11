@@ -25,9 +25,9 @@ namespace EwalletApi.UI.Controllers
 
        
         [HttpPost("Login")]
-        public IActionResult Login([FromForm]LoginDTO credentials )
+        public async Task<IActionResult> Login([FromForm]LoginDTO credentials )
         {
-            var token = authService.Login(credentials);
+            var token = await authService.Login(credentials);
             if (token == null)
                 return Unauthorized();
             return Ok(token);

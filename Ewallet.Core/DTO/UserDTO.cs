@@ -6,6 +6,7 @@ namespace Ewallet.Core.DTO
 {
     public class UserDTO
     {
+        public string uid { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PhoneNumber { get; set; }
