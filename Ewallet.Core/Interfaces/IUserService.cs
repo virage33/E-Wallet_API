@@ -1,7 +1,5 @@
-﻿using Ewallet.Core.DTO;
-using System;
+﻿using Ewallet.Models.DTO;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ewallet.Core.Interfaces

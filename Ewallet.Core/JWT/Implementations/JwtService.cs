@@ -1,4 +1,5 @@
 ﻿using Ewallet.Core.JWT.Interfaces;
+using Ewallet.Models;
 using EwalletApi.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -17,7 +18,7 @@ namespace Ewallet.Core.JWT.Implementations
         {
             configuration = _configuration;
         }
-        public string GenerateToken(UserModel user, List<string>roles)
+        public string GenerateToken(AppUser user, List<string>roles)
         {
             //add claims
             var claims = new List<Claim>();

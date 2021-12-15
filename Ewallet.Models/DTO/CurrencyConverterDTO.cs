@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 
-namespace Ewallet.Core.DTO
+
+namespace Ewallet.Models.DTO
 {
     public class CurrencyConverterDTO
     {

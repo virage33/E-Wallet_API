@@ -1,8 +1,11 @@
 ﻿using Ewallet.Commons;
 //using Ewallet.Core.DTO;
 using Ewallet.Core.Interfaces;
-using Ewallet.DataAccess.Interfaces;
+using Ewallet.DataAccess.EntityFramework.Interfaces;
+//using Ewallet.DataAccess.Interfaces;
 using Ewallet.Models;
+using Ewallet.Models.AccountModels;
+using Ewallet.Models.DTO;
 using EwalletApi.Models.AccountModels;
 using System;
 using System.Collections.Generic;
@@ -23,13 +26,13 @@ namespace Ewallet.Core.Implementations
 
         public async Task<string> CreateCurrency(string walletId,string code, bool isMain=false)
         {
-            Currency currency = new Currency();
+            WalletCurrency currency = new WalletCurrency();
             currency.WalletId = walletId;
             currency.IsMain = isMain;
-            currency.Code = code.ToUpper();
-            currency.Balance = 0;
+            
+            currency.Currencybalance = 0;
 
-            var response = await _currencyRepository.CreateCurrency(currency);
+            var response = await _currencyRepository.CreateCurrency(currency, code.ToUpper());
             if (response == 2)
                 return "currency doesn't exist";
             if (response == 1)
@@ -65,45 +68,45 @@ namespace Ewallet.Core.Implementations
         }
 
         //gets all currencies in a wallet
-        public async Task<ResponseDTO<IEnumerable<Currency>>> GetAllCurrencies(string walletId)
+        public async Task<ResponseDTO<IEnumerable<CurrencyDTO>>> GetAllCurrencies(string walletId)
         {
-            var res = new ResponseDTO<IEnumerable<Currency>>();
+            var res = new ResponseDTO<IEnumerable<CurrencyDTO>>();
             try
             {
                 var response = await _currencyRepository.GetAllCurrencies(walletId);
                 if (response != null)
-                    return res = ResponseHelper.CreateResponse<IEnumerable<Currency>>(message: "Successful", data: response, status: true);
+                    return res = ResponseHelper.CreateResponse<IEnumerable<CurrencyDTO>>(message: "Successful", data: response, status: true);
             }
             catch(Exception e)
             {
-                res = ResponseHelper.CreateResponse<IEnumerable<Currency>>(message: "Error", data: null, status: false,error:e);
+                res = ResponseHelper.CreateResponse<IEnumerable<CurrencyDTO>>(message: "Error", data: null, status: false,error:e);
                 return res;
             }
-            res = ResponseHelper.CreateResponse<IEnumerable<Currency>>(message: "Unsuccessful", data: null, status: true);
+            res = ResponseHelper.CreateResponse<IEnumerable<CurrencyDTO>>(message: "Unsuccessful", data: null, status: true);
             return res;
         }
 
 
         //gets a single currency 
-        public async Task<ResponseDTO<Currency>> GetCurrency(string currencyId)
+        public async Task<ResponseDTO<CurrencyDTO>> GetCurrency(string currencyId)
         {
-            var res = new ResponseDTO<Currency>();
+            var res = new ResponseDTO<CurrencyDTO>();
             try
             {
                 var response = await _currencyRepository.GetCurrency(currencyId);
                 if (response.WalletId != null)
                 {
-                    res = ResponseHelper.CreateResponse<Currency>(message: "Successful", data: response, status: true);
+                    res = ResponseHelper.CreateResponse<CurrencyDTO>(message: "Successful", data: response, status: true);
                     return res;
                 }
             }
             catch (Exception e)
             {
-                res = ResponseHelper.CreateResponse<Currency>(message: "Error", data: null, status: false, error:e);
+                res = ResponseHelper.CreateResponse<CurrencyDTO>(message: "Error", data: null, status: false, error:e);
                 return res;
             }
 
-            res = ResponseHelper.CreateResponse<Currency>(message: "Currency Address doesn't exist!", data: null, status: false);
+            res = ResponseHelper.CreateResponse<CurrencyDTO>(message: "Currency Address doesn't exist!", data: null, status: false);
             return res;
         }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ewallet.DataAccess.Interfaces
+namespace Ewallet.DataAccess.EntityFramework.Interfaces
 {
     public interface IWalletRepository
     {

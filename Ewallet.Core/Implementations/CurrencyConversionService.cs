@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Ewallet.Core.Interfaces;
-using Ewallet.Core.DTO;
+using Ewallet.Models.DTO;
 
 namespace Ewallet.Core.Implementations
 {

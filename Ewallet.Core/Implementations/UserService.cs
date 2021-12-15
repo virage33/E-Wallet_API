@@ -1,9 +1,10 @@
-﻿using Ewallet.Core.DTO;
-using Ewallet.Core.Interfaces;
-using Ewallet.DataAccess.Interfaces;
+﻿using Ewallet.Core.Interfaces;
+using Ewallet.DataAccess.EntityFramework.Interfaces;
+using Ewallet.Models;
+//using Ewallet.DataAccess.Interfaces;
+using Ewallet.Models.DTO;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ewallet.Core.Implementations
@@ -22,7 +23,7 @@ namespace Ewallet.Core.Implementations
             var response = await UserRepository.GetAllUsers();
             response.ForEach((x) => {
                 UserDTO user=new UserDTO();
-                user.uid = x.UserId;
+                user.uid = x.Id;
                 user.FirstName = x.FirstName;
                 user.LastName = x.LastName;
                 user.Email = x.Email;
@@ -39,15 +40,15 @@ namespace Ewallet.Core.Implementations
             var response = await UserRepository.GetUserByName(name);
             if (response != null)
             {
-                response.ForEach((x) => {
+                //response.ForEach((x) => {
                     UserDTO user = new UserDTO();
-                    user.uid = x.UserId;
-                    user.FirstName = x.FirstName;
-                    user.LastName = x.LastName;
-                    user.PhoneNumber = x.PhoneNumber;
-                    user.Email = x.Email;
+                    user.uid = response.Id;
+                    user.FirstName = response.FirstName;
+                    user.LastName = response.LastName;
+                    user.PhoneNumber = response.PhoneNumber;
+                    user.Email = response.Email;
                     result.Add(user);
-                });
+                //});
             }
 
             return result;
@@ -66,7 +67,7 @@ namespace Ewallet.Core.Implementations
             var response = await UserRepository.GetUserById(uid);
             if (response != null)
             {
-                result.uid = response.UserId;
+                result.uid = response.Id;
                 result.Email = response.Email;
                 result.FirstName = response.FirstName;
                 result.LastName = response.LastName;
@@ -78,9 +79,16 @@ namespace Ewallet.Core.Implementations
 
         //Delete a user
         public async Task<string> DeleteUser(string uid)
+
         {
-            var response = await UserRepository.DeleteUser(uid);
-            if (response >0)
+            var res = await GetUserById(uid);
+            AppUser user = new AppUser();
+            user.Id = res.uid;
+            user.LastName = res.LastName;
+            user.Email = res.Email;
+            user.FirstName = res.FirstName;
+            var response = await UserRepository.DeleteUser(user);
+            if (response.Succeeded!=false)
                 return "successful";
             return "error";
         }
@@ -93,7 +101,7 @@ namespace Ewallet.Core.Implementations
         public async Task<string> DeActivateUser(string uid)
         {
             var response = await UserRepository.ActivateOrDeActivateUser(false,uid);
-            if (response > 0)
+            if (response.Succeeded !=false)
                 return "Deactivated";
             return "error";
         }
@@ -101,7 +109,7 @@ namespace Ewallet.Core.Implementations
         public async Task<string> ReActivateUser(string uid)
         {
             var response = await UserRepository.ActivateOrDeActivateUser(true, uid);
-            if (response > 0)
+            if (response.Succeeded != false)
                 return "Activated";
             return "error";
         }

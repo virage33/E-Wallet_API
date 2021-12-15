@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ewallet.Core.DTO
+namespace Ewallet.Models.DTO
 {
     public class LoginDTO
     {

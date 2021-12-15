@@ -1,4 +1,5 @@
-﻿using EwalletApi.Models;
+﻿using Ewallet.Models;
+using EwalletApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace Ewallet.Core.JWT.Interfaces
 {
     public interface IJwtService
     {
-        public string GenerateToken(UserModel user, List<string> roles);
+        public string GenerateToken(AppUser user, List<string> roles);
     }
 }

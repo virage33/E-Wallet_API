@@ -1,0 +1,408 @@
+﻿[
+  {
+    "firstname": "Nolan",
+    "lastname": "Benjamin",
+    "email": "nolanbenjamin@panzent.com",
+    "password": "Williamson",
+    "phone": "+234 (895) 542-3137",
+    "isActive": false,
+    "wallet": [
+      {
+        "Id": "b9832663-20ce-46ff-97e9-ef4bdf91599c",
+        "MainCurrency": "Jimenez",
+        "Currency": [
+          {
+            "Id": "a552bc23-c946-44b3-ae76-d023d4de00cc",
+            "Currencybalance": 1129.81,
+            "IsMain": true,
+            "WalletId": "3891d7f4-9b43-4076-8205-1fa176260570",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 1882.99,
+        "Transactions": [],
+        "UserId": "31048d2a-0788-4503-8ab7-79281ec6765b"
+      },
+      {
+        "Id": "6ebd037e-ad40-42ee-9d65-9c8d18f30185",
+        "MainCurrency": "Delaney",
+        "Currency": [
+          {
+            "Id": "da4988a2-3da7-46c1-8ca0-9e309fa12a53",
+            "Currencybalance": 2816.52,
+            "IsMain": false,
+            "WalletId": "cfb64d40-a9e8-4174-bac3-24f9540a013a",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 2719.25,
+        "Transactions": [],
+        "UserId": "bc26f007-6346-4d3a-9138-0b35b8c34203"
+      },
+      {
+        "Id": "fed6837e-52e2-4d6a-bb60-fa393b5d1466",
+        "MainCurrency": "Ford",
+        "Currency": [
+          {
+            "Id": "886da671-238e-47eb-b141-ea864c0197b2",
+            "Currencybalance": 3325.95,
+            "IsMain": false,
+            "WalletId": "738087a4-e443-4826-b0cb-58cc533022b9",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 1065.37,
+        "Transactions": [],
+        "UserId": "68a95102-d222-442c-abbe-8ee49127b9bf"
+      }
+    ]
+  },
+  {
+    "firstname": "Gallagher",
+    "lastname": "Stewart",
+    "email": "gallagherstewart@panzent.com",
+    "password": "Joseph",
+    "phone": "+234 (803) 449-3534",
+    "isActive": true,
+    "wallet": [
+      {
+        "Id": "2db1938a-71d3-4544-874f-8abef7b6a29c",
+        "MainCurrency": "Katy",
+        "Currency": [
+          {
+            "Id": "d5ea30b5-f501-4ab6-8911-30ae915f0ef4",
+            "Currencybalance": 2741.87,
+            "IsMain": false,
+            "WalletId": "3ee676cc-8644-48ad-96b4-c0c5a26a48d2",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 3882.28,
+        "Transactions": [],
+        "UserId": "f1071f7b-05fc-4d3e-a58b-a8899fd009f6"
+      },
+      {
+        "Id": "98d6e90d-656d-4489-97c9-d93de1d288e1",
+        "MainCurrency": "Clay",
+        "Currency": [
+          {
+            "Id": "f9334380-5963-4dcd-bbc7-ec22611ec5f9",
+            "Currencybalance": 3237.15,
+            "IsMain": true,
+            "WalletId": "2a7e832e-4d59-4a6a-a54b-cfd76a2be82e",
+            "CurrencyId": 2
+          }
+        ],
+        "WalletBalance": 1190.32,
+        "Transactions": [],
+        "UserId": "972eba86-44e8-497d-be11-38162b48fee9"
+      },
+      {
+        "Id": "7f6c4ce9-6d8c-4f7c-a4fc-f31f343f4be9",
+        "MainCurrency": "Cote",
+        "Currency": [
+          {
+            "Id": "2c478197-4db9-4b8b-b008-88dd03470576",
+            "Currencybalance": 2632.77,
+            "IsMain": true,
+            "WalletId": "88c190f8-f4f7-4236-bd3e-9a78d63c4bc8",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 2423.85,
+        "Transactions": [],
+        "UserId": "bcaa5a95-82bb-49b1-9814-c528b6306f19"
+      }
+    ]
+  },
+  {
+    "firstname": "Cotton",
+    "lastname": "Barry",
+    "email": "cottonbarry@panzent.com",
+    "password": "Donna",
+    "phone": "+234 (810) 469-2096",
+    "isActive": true,
+    "wallet": [
+      {
+        "Id": "eebda5ff-27da-4fee-a8ef-ce70deab5cff",
+        "MainCurrency": "Geraldine",
+        "Currency": [
+          {
+            "Id": "c7bf70bc-5bc2-418c-bb08-771fc22342a8",
+            "Currencybalance": 2961.02,
+            "IsMain": false,
+            "WalletId": "f3192a53-cb2d-4d67-8235-5bfe799308a2",
+            "CurrencyId": 2
+          }
+        ],
+        "WalletBalance": 1877.83,
+        "Transactions": [],
+        "UserId": "75d52001-0207-414d-bd2b-19b2ce199fb0"
+      },
+      {
+        "Id": "daa090db-c85e-4d5f-9de0-db82eeb2c856",
+        "MainCurrency": "Maldonado",
+        "Currency": [
+          {
+            "Id": "e8dc796c-987f-47ac-98c0-1e65068f98e5",
+            "Currencybalance": 1698.83,
+            "IsMain": false,
+            "WalletId": "c11c5ea6-7ca6-4862-ba1b-1dff5746c61b",
+            "CurrencyId": 5
+          }
+        ],
+        "WalletBalance": 3757.3,
+        "Transactions": [],
+        "UserId": "6bfcf400-d0ae-4c5c-82e1-98c3f80ac075"
+      },
+      {
+        "Id": "898fcf6c-7ab5-4813-8bcc-c5c7230cc52b",
+        "MainCurrency": "Lynda",
+        "Currency": [
+          {
+            "Id": "1a516709-107c-45c8-a95e-83fbf295987b",
+            "Currencybalance": 1027.99,
+            "IsMain": true,
+            "WalletId": "0cdf8078-ad8e-4c9e-a1aa-f2bbccdeeaa3",
+            "CurrencyId": 2
+          }
+        ],
+        "WalletBalance": 2913.55,
+        "Transactions": [],
+        "UserId": "ca3fbb2c-f196-427a-87b7-cfdc78244fa7"
+      }
+    ]
+  },
+  {
+    "firstname": "Bullock",
+    "lastname": "Phelps",
+    "email": "bullockphelps@panzent.com",
+    "password": "Violet",
+    "phone": "+234 (895) 451-2984",
+    "isActive": false,
+    "wallet": [
+      {
+        "Id": "ebdb01c3-411b-4c28-8946-7f54c2040c8b",
+        "MainCurrency": "Ramos",
+        "Currency": [
+          {
+            "Id": "a889d294-d8b9-4978-9bb4-c23d88d2e752",
+            "Currencybalance": 2355.4,
+            "IsMain": true,
+            "WalletId": "1519b5b4-f146-4101-b239-84a88377cda0",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 2446.65,
+        "Transactions": [],
+        "UserId": "fa7f1158-8dba-41ee-9f0d-1ab9ce9bd58e"
+      },
+      {
+        "Id": "e7dcd9aa-ef4c-4557-94ab-788dfb24a6d9",
+        "MainCurrency": "Stanley",
+        "Currency": [
+          {
+            "Id": "d69f4f83-5b51-4f6f-a06b-22863653ad21",
+            "Currencybalance": 2154.15,
+            "IsMain": false,
+            "WalletId": "bab6b9f5-639c-472a-842e-90eceb01445c",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 1254.67,
+        "Transactions": [],
+        "UserId": "7fdda84d-fb71-457e-9439-6ad210a57b31"
+      },
+      {
+        "Id": "5a94c1f7-792d-4ddc-b44c-530fe9d2885c",
+        "MainCurrency": "Yang",
+        "Currency": [
+          {
+            "Id": "64859575-8d67-417b-8ab8-9444c400994e",
+            "Currencybalance": 3287.76,
+            "IsMain": false,
+            "WalletId": "83e52fc6-2f1a-4e73-a18d-a6a48db459df",
+            "CurrencyId": 2
+          }
+        ],
+        "WalletBalance": 2021.48,
+        "Transactions": [],
+        "UserId": "dfbeee61-e76b-4d8b-89d5-37c3ef9d1c5d"
+      }
+    ]
+  },
+  {
+    "firstname": "Della",
+    "lastname": "Pena",
+    "email": "dellapena@panzent.com",
+    "password": "Barnett",
+    "phone": "+234 (934) 449-2713",
+    "isActive": true,
+    "wallet": [
+      {
+        "Id": "c485fdf2-44af-465e-859f-05dc7fa39b32",
+        "MainCurrency": "Leonard",
+        "Currency": [
+          {
+            "Id": "b3a2a010-a28f-4390-8a06-2d2ee9ad8731",
+            "Currencybalance": 2160.92,
+            "IsMain": false,
+            "WalletId": "14cc7feb-5281-46d7-8b88-083a68c6b07a",
+            "CurrencyId": 4
+          }
+        ],
+        "WalletBalance": 1105.62,
+        "Transactions": [],
+        "UserId": "15348a31-be66-43e8-a2ce-74508e974d3f"
+      },
+      {
+        "Id": "a9ba88a6-56b5-4318-bbe2-ed3b60e5bffa",
+        "MainCurrency": "Mcguire",
+        "Currency": [
+          {
+            "Id": "17e09282-8c96-4892-8362-8d04f4bbfca3",
+            "Currencybalance": 2678.52,
+            "IsMain": true,
+            "WalletId": "af752334-efdc-47ab-9595-58c6e7a1ea27",
+            "CurrencyId": 4
+          }
+        ],
+        "WalletBalance": 2600.19,
+        "Transactions": [],
+        "UserId": "1b09bc56-be34-47bc-ad06-6840c6a5c2a1"
+      },
+      {
+        "Id": "0f4bd9f6-86a8-438c-be97-1d3f4ad63830",
+        "MainCurrency": "Barlow",
+        "Currency": [
+          {
+            "Id": "a7f175d9-2fc9-40b2-b0f9-198855740938",
+            "Currencybalance": 2031.09,
+            "IsMain": true,
+            "WalletId": "699a929f-b04f-4068-9b8b-f9bfdd3719ef",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 2237.3,
+        "Transactions": [],
+        "UserId": "cd0d93de-628c-4138-a2e3-2b11249740f2"
+      }
+    ]
+  },
+  {
+    "firstname": "Katelyn",
+    "lastname": "Lara",
+    "email": "katelynlara@panzent.com",
+    "password": "Dickson",
+    "phone": "+234 (949) 459-3302",
+    "isActive": true,
+    "wallet": [
+      {
+        "Id": "aa6a5dae-16a3-49c5-baa4-a6fcbe0feb6d",
+        "MainCurrency": "Felecia",
+        "Currency": [
+          {
+            "Id": "70f77692-eedd-4dad-884e-69b32153a1dd",
+            "Currencybalance": 2817,
+            "IsMain": false,
+            "WalletId": "3ffc7abb-464d-435c-9ed0-57683ec0addc",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 2757.85,
+        "Transactions": [],
+        "UserId": "99df0823-7122-48d1-8051-c44bbc776077"
+      },
+      {
+        "Id": "a545b379-be30-4643-891e-7f4bea6c28a0",
+        "MainCurrency": "Mccullough",
+        "Currency": [
+          {
+            "Id": "0cc059f9-dec3-4fe9-9595-2baa44fd1bf3",
+            "Currencybalance": 1830.04,
+            "IsMain": true,
+            "WalletId": "1fb874fc-4695-45cc-8095-2a808f00934b",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 1681.6,
+        "Transactions": [],
+        "UserId": "3bb63a61-7111-4ab1-a33d-97b2c3db5bb9"
+      },
+      {
+        "Id": "e444a3ed-7561-45dd-a653-0c603e5a8fb5",
+        "MainCurrency": "Chandler",
+        "Currency": [
+          {
+            "Id": "ea5621fe-75d1-4944-9d5b-2ab30f87e1b7",
+            "Currencybalance": 2820.21,
+            "IsMain": true,
+            "WalletId": "90e797e9-8b15-40f9-abd7-9f3719a14312",
+            "CurrencyId": 1
+          }
+        ],
+        "WalletBalance": 3188.16,
+        "Transactions": [],
+        "UserId": "63a52a93-2767-4cc1-b624-2be0b08117b0"
+      }
+    ]
+  },
+  {
+    "firstname": "George",
+    "lastname": "Ferguson",
+    "email": "georgeferguson@panzent.com",
+    "password": "Underwood",
+    "phone": "+234 (807) 482-2715",
+    "isActive": true,
+    "wallet": [
+      {
+        "Id": "4de6d7a9-3c18-435b-9aae-ec7e122c6e22",
+        "MainCurrency": "Tara",
+        "Currency": [
+          {
+            "Id": "e3cdb69b-3de8-42fe-8177-e79e659063f8",
+            "Currencybalance": 1461.83,
+            "IsMain": false,
+            "WalletId": "d3bade9d-6346-47c4-95b9-0f34245e5ba9",
+            "CurrencyId": 2
+          }
+        ],
+        "WalletBalance": 1181.54,
+        "Transactions": [],
+        "UserId": "8e0b763b-c66d-42ee-aca3-961fc0065a3c"
+      },
+      {
+        "Id": "393e6a53-c0a1-4a9a-8be8-28d9d79f56a4",
+        "MainCurrency": "Joan",
+        "Currency": [
+          {
+            "Id": "cdbee9e7-c3a9-4172-b29f-2e88b62e0069",
+            "Currencybalance": 1353.43,
+            "IsMain": false,
+            "WalletId": "071e8bba-2a12-4829-8a30-027d0f1be9a4",
+            "CurrencyId": 2
+          }
+        ],
+        "WalletBalance": 3713.66,
+        "Transactions": [],
+        "UserId": "c870305e-72c2-4598-b5dc-c54b78588b06"
+      },
+      {
+        "Id": "0700847e-d688-4836-aff5-29aa53c28a6b",
+        "MainCurrency": "Weber",
+        "Currency": [
+          {
+            "Id": "38d8333c-6ca1-4b77-a135-97e2e67bb364",
+            "Currencybalance": 2148.58,
+            "IsMain": true,
+            "WalletId": "c16e12a6-73c3-4c39-bb53-38ca3f474007",
+            "CurrencyId": 2
+          }
+        ],
+        "WalletBalance": 1476.28,
+        "Transactions": [],
+        "UserId": "b0a16504-8d7e-48c2-99aa-f4e724b3d35b"
+      }
+    ]
+  }
+]

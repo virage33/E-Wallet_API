@@ -6,7 +6,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Ewallet.Core.DTO
+namespace Ewallet.Models.DTO
 {
     public class ConversionRateDTO
     {

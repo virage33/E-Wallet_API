@@ -6,14 +6,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ewallet.DataAccess.Interfaces
+namespace Ewallet.DataAccess.EntityFramework.Interfaces
 {
     public interface ICurrencyRepository
     {
         Task<int> CreateCurrency(WalletCurrency data,string code);
         Task<int> DeleteCurrency(string Id);
         Task<CurrencyDTO> GetCurrency(string currencyId);
-        Task<IEnumerable<CurrencyDTO>> GetAllCurrencies(string walletId);
+        Task<List<CurrencyDTO>> GetAllCurrencies(string walletId);
         Task<int> DepositOrWithdraw(string currencyId, decimal newBalance);
        
     }

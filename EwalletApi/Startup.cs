@@ -8,12 +8,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Ewallet.DataAccess.Implementations;
-using Ewallet.DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
+//using Ewallet.DataAccess.Implementations;
+using Ewallet.DataAccess.EntityFramework.Implementations;
+//using Ewallet.DataAccess.Interfaces;
 using Ewallet.Core.Interfaces;
 using Ewallet.Core.Implementations;
 using Ewallet.Core.JWT.Implementations;
 using Ewallet.Core.JWT.Interfaces;
+using Ewallet.DataAccess.EntityFramework;
+using Microsoft.AspNetCore.Identity;
+using Ewallet.Models;
+using Ewallet.DataAccess.EntityFramework.Interfaces;
 
 namespace EwalletApi
 {
@@ -43,8 +49,12 @@ namespace EwalletApi
             services.AddScoped<ITransactionRepository, TransactionsRepository>();
             //currency converter
             services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
+            //entity framework dbContext
+            services.AddDbContextPool<EwalletContext>( options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<EwalletContext>();
             
-
+            //seeder class
+            services.AddTransient<Seeder>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
@@ -93,7 +103,7 @@ namespace EwalletApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Seeder seed)
         {
             if (env.IsDevelopment())
             {
@@ -114,6 +124,7 @@ namespace EwalletApi
             {
                 endpoints.MapControllers();
             });
+            seed.Seed().Wait();
         }
     }
 }

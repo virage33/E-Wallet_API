@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Ewallet.Core.DTO
+namespace Ewallet.Models.DTO
 {
     public class ForgotPasswordDTO
     {

@@ -22,7 +22,7 @@ namespace Ewallet.DataAccess.Implementations
         }
 
         //Creates user wallets
-        public async Task<int> CreateWallet(WalletModel details, string uid )
+        public async Task<int> CreateWallet(WalletModel details)
         {
            
             string command = "INSERT INTO Wallet VALUES(@WalletId,@MainCurrency,@WalletBalance,@UserId)";
@@ -32,7 +32,7 @@ namespace Ewallet.DataAccess.Implementations
                 cmd.Parameters.AddWithValue("@WalletId", details.Id);
                 cmd.Parameters.AddWithValue("@MainCurrency", details.MainCurrency);
                 cmd.Parameters.AddWithValue("@WalletBalance", details.WalletBalance);
-                cmd.Parameters.AddWithValue("@UserId", uid);
+                cmd.Parameters.AddWithValue("@UserId", details.UserId);
                 _conn.Open();
                 response = (int)cmd.ExecuteNonQuery();
                 _conn.Close();
@@ -116,7 +116,7 @@ namespace Ewallet.DataAccess.Implementations
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception )
             {
 
                 throw;

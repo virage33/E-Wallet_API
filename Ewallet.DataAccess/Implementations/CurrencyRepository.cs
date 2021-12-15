@@ -1,4 +1,6 @@
 ﻿using Ewallet.DataAccess.Interfaces;
+using Ewallet.Models.AccountModels;
+using Ewallet.Models.DTO;
 using EwalletApi.Models.AccountModels;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -19,9 +21,9 @@ namespace Ewallet.DataAccess.Implementations
             _config = configuration;
             _conn = new SqlConnection(_config.GetSection("ConnectionStrings:Default").Value);
         }
+        
 
-
-        public async Task<int> CreateCurrency(Currency data)
+        public async Task<int> CreateCurrency(WalletCurrency data, string code)
         {
             string command = "INSERT INTO WalletCurrency Values(@Id,@WalletId,@CurrencyId,@balance,@IsMain)";
             string cmd1 = "SELECT CurrencyId FROM Currency WHERE CurrencyShortCode = @shortcode";
@@ -33,7 +35,7 @@ namespace Ewallet.DataAccess.Implementations
             
             using (var cmd = new SqlCommand(cmd1, _conn))
             {
-                cmd.Parameters.AddWithValue("@shortcode", data.Code);
+                cmd.Parameters.AddWithValue("@shortcode", code);
                 _conn.Open();
                 var response = await cmd.ExecuteReaderAsync();
                 while (response.Read())
@@ -52,7 +54,7 @@ namespace Ewallet.DataAccess.Implementations
                 cmd.Parameters.AddWithValue("@Id", data.Id);
                 cmd.Parameters.AddWithValue("@CurrencyId", currencyId);
                 cmd.Parameters.AddWithValue("@WalletId", data.WalletId);
-                cmd.Parameters.AddWithValue("@balance", data.Balance);
+                cmd.Parameters.AddWithValue("@balance", data.Currencybalance);
                 cmd.Parameters.AddWithValue("@IsMain", data.IsMain);
                 _conn.Open();
                 response2 = await cmd.ExecuteNonQueryAsync();
@@ -85,7 +87,7 @@ namespace Ewallet.DataAccess.Implementations
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 throw;
@@ -123,9 +125,9 @@ namespace Ewallet.DataAccess.Implementations
             return response;
         }
 
-        public async Task<IEnumerable<Currency>> GetAllCurrencies(string walletId)
+        public async Task<IEnumerable<CurrencyDTO>> GetAllCurrencies(string walletId)
         {
-            List<Currency> result = new List<Currency>();
+            List<CurrencyDTO> result = new List<CurrencyDTO>();
             
             string command = "SELECT * FROM WalletCurrency JOIN Currency ON WalletCurrency.CurrencyId=Currency.CurrencyId WHERE WalletId = @walletId";
             try
@@ -141,7 +143,7 @@ namespace Ewallet.DataAccess.Implementations
                         while (response.Read())
                         {
                             result.Add(
-                            new Currency
+                            new CurrencyDTO
                             {
                                 Balance = response.GetDecimal(response.GetOrdinal("CurrencyBalance")),
                                 WalletId = response.GetString(response.GetOrdinal("WalletId")).Trim(),
@@ -157,7 +159,7 @@ namespace Ewallet.DataAccess.Implementations
                  }
                 
             }
-            catch (Exception e)
+            catch (Exception )
             {
 
                 throw;
@@ -169,9 +171,9 @@ namespace Ewallet.DataAccess.Implementations
             return result;
         }
 
-        public async Task<Currency> GetCurrency(string currencyId)
+        public async Task<CurrencyDTO> GetCurrency(string currencyId)
         {
-            Currency currency = new Currency();
+            CurrencyDTO currency = new CurrencyDTO();
             string command = "SELECT * FROM WalletCurrency JOIN Currency ON WalletCurrency.CurrencyId=Currency.CurrencyId WHERE Id = @currencyId";
             
 
@@ -196,7 +198,7 @@ namespace Ewallet.DataAccess.Implementations
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception )
             {
 
                 throw;

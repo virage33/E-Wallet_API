@@ -25,7 +25,7 @@ namespace EwalletApi.Controllers
 
         //Gets all user wallets
         [HttpGet("GetUserWallets")]
-        [Authorize(Roles = "noob , elite,admin")]
+       // [Authorize(Roles = "noob , elite,admin")]
         public async Task<IActionResult> GetUserWallets(string userId)
         {
             if (String.IsNullOrWhiteSpace(userId))
@@ -40,7 +40,7 @@ namespace EwalletApi.Controllers
 
         // Gets an individual wallet
         [HttpGet("GetWallet")]
-        [Authorize(Roles = "elite, noob, admin")]
+        //[Authorize(Roles = "elite, noob, admin")]
         public async Task<IActionResult> GetIndividualWallet(string walletId)
         {
             if (String.IsNullOrWhiteSpace(walletId))
