@@ -21,7 +21,11 @@ namespace Ewallet.Models.AccountModels
         [Required]
         public int CurrencyId { get; set; }
         public Currency Currency { get; set; }
+        
 
-
+        public WalletCurrency()
+        {
+            
+        }
     }
 }

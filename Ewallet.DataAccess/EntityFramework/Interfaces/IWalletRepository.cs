@@ -13,7 +13,7 @@ namespace Ewallet.DataAccess.EntityFramework.Interfaces
         Task<int> DeleteWallet(string walletId);
         Task<int> CreateWallet(WalletModel Uid);
 
-
+        Task<int> UpdateWalletBalance(string walletId, decimal balance);
 
     }
 }

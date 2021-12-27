@@ -12,20 +12,21 @@ namespace EwalletApi.Models.AccountModels
     public class WalletModel:BaseEntity
     {
 
-#nullable enable
+
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
         
-        public string? MainCurrency { get; set; } 
+        public string MainCurrency { get; set; } 
         public List<WalletCurrency> Currency { get; set; }
         
         [Column(TypeName ="decimal(18,2)")]
         public decimal WalletBalance { get; set;}
-        public List<Transactions> Transactions { get; set; }
+        
         [Required]
         public string UserId { get; set; }
         public AppUser User { get; set; }
-#nullable disable
+        public List<Transactions> Transactions { get; set; }
+
         public WalletModel()
         {
             Currency = new List<WalletCurrency>();

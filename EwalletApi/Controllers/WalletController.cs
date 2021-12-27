@@ -1,9 +1,16 @@
-﻿using Ewallet.Core.Interfaces;
+﻿using Ewallet.Commons;
+using Ewallet.Core.Interfaces;
+using Ewallet.Models;
+using Ewallet.Models.DTO.InputDTO;
+using Ewallet.Models.DTO.WalletDTO;
+using Ewallet.Models.emailModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,19 +24,47 @@ namespace EwalletApi.Controllers
     {
         private readonly IWalletServices _walletServices;
         private readonly ICurrencyService _currencyService;
-        public WalletController(IWalletServices walletServices, ICurrencyService currencyService)
+        private readonly IMailService _mailService;
+
+        public WalletController(IWalletServices walletServices, ICurrencyService currencyService, IMailService mailService)
         {
             _walletServices = walletServices;
             _currencyService = currencyService;
+            this._mailService = mailService;
         }
+
+        [HttpPost("email")]
+        public async Task<IActionResult> Send ([FromForm] MailRequest request)
+        {
+            try
+            {
+                await _mailService.SendMailAsync(request);
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         //Gets all user wallets
         [HttpGet("GetUserWallets")]
-       // [Authorize(Roles = "noob , elite,admin")]
+        [Authorize(Roles = "noob , elite,admin")]
         public async Task<IActionResult> GetUserWallets(string userId)
         {
+
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAdmin = HttpContext.User.IsInRole("admin");
+
+            if (!isAdmin && loggedInUser != userId)
+                return BadRequest("Access Denied");
+
             if (String.IsNullOrWhiteSpace(userId))
                 return BadRequest("please enter a valid Uid");
+            
             var response = await _walletServices.GetAllUserWallets(userId);
             if (response != null)
                 return Ok(response);
@@ -41,8 +76,15 @@ namespace EwalletApi.Controllers
         // Gets an individual wallet
         [HttpGet("GetWallet")]
         //[Authorize(Roles = "elite, noob, admin")]
-        public async Task<IActionResult> GetIndividualWallet(string walletId)
+        public async Task<IActionResult> GetIndividualWallet(string uid,string walletId)
         {
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAdmin = HttpContext.User.IsInRole("admin");
+
+            if (!isAdmin && loggedInUser != uid)
+                return BadRequest("Access Denied");
+
             if (String.IsNullOrWhiteSpace(walletId))
                 return BadRequest("enter a valid wallet Id");
             var response = await _walletServices.GetWallet(walletId);
@@ -54,11 +96,20 @@ namespace EwalletApi.Controllers
 
        //Deletes individual wallets
         [HttpDelete("DeleteWallet")]
-        [Authorize(Roles ="elite")]
-        public async Task<IActionResult> DeleteWallet(string walletId)
+        //[Authorize(Roles ="elite")]
+        public async Task<IActionResult> DeleteWallet(string uid,string walletId)
         {
+            
+
             if (String.IsNullOrWhiteSpace(walletId))
                 return BadRequest("enter a valid wallet Id");
+
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (loggedInUser != uid)
+                return BadRequest("Access Denied");
+
             var response = await _walletServices.DeleteWallet(walletId);
             if (response == null)
                 return NoContent();
@@ -68,6 +119,7 @@ namespace EwalletApi.Controllers
 
 
         [HttpPost("AddWallet")]
+        //[Authorize(Roles ="elite")]
         public async Task<IActionResult> AddWallet(string uid , string mainCurrency)
         {
             if (String.IsNullOrWhiteSpace(uid))
@@ -143,9 +195,27 @@ namespace EwalletApi.Controllers
         }
 
         [HttpPost("Withdraw")]
-        public async Task<IActionResult> Withdraw(string currencyId, decimal amount)
+        public async Task<IActionResult> Withdraw(DebitDTO details)
         {
-            var response = await _currencyService.Withdraw(currencyId: currencyId, amount:amount);
+            var response = await _currencyService.Withdraw(details);
+            return Ok(response);
+        }
+
+        [HttpPost("Transfer")]
+        public async Task<IActionResult> Withdraw(TransferFundsDTO details)
+        {
+            var response = await _currencyService.Transfer(details);
+            if (!response.IsSuccessful)
+                return BadRequest(response.Message);
+            return Ok(response);
+        }
+
+        [HttpGet("UserBalance")]
+        public async Task<IActionResult> UserBalance(string uid)
+        {
+            var response = await _walletServices.UserBalance(uid);
+            if (!response.IsSuccessful)
+                return BadRequest(response.Message);
             return Ok(response);
         }
     }

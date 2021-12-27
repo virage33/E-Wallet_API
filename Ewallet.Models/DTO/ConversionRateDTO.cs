@@ -10,11 +10,24 @@ namespace Ewallet.Models.DTO
 {
     public class ConversionRateDTO
     {
-        [JsonProperty("", NullValueHandling = NullValueHandling.Ignore)]
-        public double ConvertTo { get; set; }
-        [JsonProperty("PHP_USD", NullValueHandling = NullValueHandling.Ignore)]
-        public double ConvertFrom { get; set; }
+
+        [JsonProperty("success", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Success { get; set; }
+
+        [JsonProperty("timestamp", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Timestamp { get; set; }
+
+        [JsonProperty("base", NullValueHandling = NullValueHandling.Ignore)]
+        public string Base { get; set; }
+
+        [JsonProperty("date", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTimeOffset? Date { get; set; }
+
+        [JsonProperty("rates", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, double> Rates { get; set; }
+
 
     }
+
 }
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ewallet.DataAccess.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,8 @@ namespace Ewallet.DataAccess.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(30)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    password = table.Column<string>(nullable: false)
+                    password = table.Column<string>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -195,20 +196,20 @@ namespace Ewallet.DataAccess.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    WalletId = table.Column<string>(nullable: true),
+                    TransactionsId = table.Column<string>(nullable: false),
+                    WalletIdId = table.Column<string>(nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
-                    AccountAddress = table.Column<string>(nullable: false),
-                    Remark = table.Column<string>(type: "nvarchar(255)", nullable: true),
-                    TransactionType = table.Column<string>(type: "nvarchar(30)", nullable: false)
+                    Remark = table.Column<string>(type: "nvarchar(15)", nullable: true),
+                    TransactionType = table.Column<string>(type: "nvarchar(10)", nullable: false),
+                    CurrencyShortCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.PrimaryKey("PK_Transactions", x => x.TransactionsId);
                     table.ForeignKey(
-                        name: "FK_Transactions_Wallet_WalletId",
-                        column: x => x.WalletId,
+                        name: "FK_Transactions_Wallet_WalletIdId",
+                        column: x => x.WalletIdId,
                         principalTable: "Wallet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -238,6 +239,67 @@ namespace Ewallet.DataAccess.Migrations
                         column: x => x.WalletId,
                         principalTable: "Wallet",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CreditTransactions",
+                columns: table => new
+                {
+                    CreditTransactionsId = table.Column<string>(nullable: false),
+                    DestinationWalletAddress = table.Column<string>(nullable: true),
+                    DestinationCurrencyAddress = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CreditTransactions", x => x.CreditTransactionsId);
+                    table.ForeignKey(
+                        name: "FK_CreditTransactions_Transactions_CreditTransactionsId",
+                        column: x => x.CreditTransactionsId,
+                        principalTable: "Transactions",
+                        principalColumn: "TransactionsId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DebitTransactions",
+                columns: table => new
+                {
+                    DebitTransactionsId = table.Column<string>(nullable: false),
+                    BeneficiaryAddress = table.Column<string>(nullable: false),
+                    BeneficiaryName = table.Column<string>(nullable: true),
+                    FinancialInstitutionType = table.Column<string>(nullable: true),
+                    InstitutionName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DebitTransactions", x => x.DebitTransactionsId);
+                    table.ForeignKey(
+                        name: "FK_DebitTransactions_Transactions_DebitTransactionsId",
+                        column: x => x.DebitTransactionsId,
+                        principalTable: "Transactions",
+                        principalColumn: "TransactionsId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransferTransactions",
+                columns: table => new
+                {
+                    TransferTransactionsId = table.Column<string>(nullable: false),
+                    BeneficiaryWalletAddress = table.Column<string>(nullable: true),
+                    BeneficiaryName = table.Column<string>(nullable: true),
+                    BeneficiaryId = table.Column<string>(nullable: true),
+                    SenderWalletAddress = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransferTransactions", x => x.TransferTransactionsId);
+                    table.ForeignKey(
+                        name: "FK_TransferTransactions_Transactions_TransferTransactionsId",
+                        column: x => x.TransferTransactionsId,
+                        principalTable: "Transactions",
+                        principalColumn: "TransactionsId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -281,9 +343,9 @@ namespace Ewallet.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_WalletId",
+                name: "IX_Transactions_WalletIdId",
                 table: "Transactions",
-                column: "WalletId");
+                column: "WalletIdId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wallet_UserId",
@@ -319,13 +381,22 @@ namespace Ewallet.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "CreditTransactions");
+
+            migrationBuilder.DropTable(
+                name: "DebitTransactions");
+
+            migrationBuilder.DropTable(
+                name: "TransferTransactions");
 
             migrationBuilder.DropTable(
                 name: "WalletCurrency");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "Currency");

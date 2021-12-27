@@ -9,6 +9,6 @@ namespace Ewallet.Core.JWT.Interfaces
 {
     public interface IJwtService
     {
-        public string GenerateToken(AppUser user, List<string> roles);
+        public string GenerateToken(AppUser user, IList<string> roles);
     }
 }

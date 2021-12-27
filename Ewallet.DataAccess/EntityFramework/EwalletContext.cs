@@ -18,12 +18,9 @@ namespace Ewallet.DataAccess.EntityFramework
         public DbSet<WalletModel> Wallet { get; set; }
         public DbSet<WalletCurrency> WalletCurrency { get; set; }
         public DbSet<Transactions> Transactions { get; set; }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    var configuration = new ConfigurationBuilder();
-        //    optionsBuilder.UseSqlServer(connectionString: "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=EwalletDb;Integrated Security=True");
-        //}
+        public DbSet<CreditTransactions> CreditTransactions { get; set; }
+        public DbSet<DebitTransactions> DebitTransactions { get; set; }
+        public DbSet<TransferTransactions> TransferTransactions { get; set; }
 
         public EwalletContext(DbContextOptions<EwalletContext> options)
             : base(options)

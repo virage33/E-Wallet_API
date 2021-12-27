@@ -119,5 +119,12 @@ namespace Ewallet.Core.Implementations
             
             return "successful";
         }
+
+        public async Task<IList<string>> GetUserRoles(string uid)
+        {
+            var user = await UserRepository.GetUserById(uid);
+            var res = await UserRepository.GetUserRoles(user);
+            return res;
+        }
     }
 }

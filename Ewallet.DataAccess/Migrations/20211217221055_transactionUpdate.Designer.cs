@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ewallet.DataAccess.Migrations
 {
     [DbContext(typeof(EwalletContext))]
-    [Migration("20211213205928_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20211217221055_transactionUpdate")]
+    partial class transactionUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,67 @@ namespace Ewallet.DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Ewallet.Models.AccountModels.CreditTransactions", b =>
+                {
+                    b.Property<string>("CreditTransactionsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DestinationCurrencyAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DestinationWalletAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CreditTransactionsId");
+
+                    b.ToTable("CreditTransactions");
+                });
+
+            modelBuilder.Entity("Ewallet.Models.AccountModels.DebitTransactions", b =>
+                {
+                    b.Property<string>("DebitTransactionsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BeneficiaryAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BeneficiaryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FinancialInstitutionType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InstitutionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DebitTransactionsId");
+
+                    b.ToTable("DebitTransactions");
+                });
+
+            modelBuilder.Entity("Ewallet.Models.AccountModels.TransferTransactions", b =>
+                {
+                    b.Property<string>("TransferTransactionsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BeneficiaryId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BeneficiaryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BeneficiaryWalletAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderWalletAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TransferTransactionsId");
+
+                    b.ToTable("TransferTransactions");
+                });
 
             modelBuilder.Entity("Ewallet.Models.AccountModels.WalletCurrency", b =>
                 {
@@ -70,6 +131,9 @@ namespace Ewallet.DataAccess.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -147,30 +211,29 @@ namespace Ewallet.DataAccess.Migrations
 
             modelBuilder.Entity("EwalletApi.Models.AccountModels.Transactions", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("TransactionsId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AccountAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CurrencyShortCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("TransactionType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("WalletId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TransactionsId");
 
                     b.HasIndex("WalletId");
 
@@ -334,6 +397,33 @@ namespace Ewallet.DataAccess.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Ewallet.Models.AccountModels.CreditTransactions", b =>
+                {
+                    b.HasOne("EwalletApi.Models.AccountModels.Transactions", "Transactions")
+                        .WithOne("CreditTransactions")
+                        .HasForeignKey("Ewallet.Models.AccountModels.CreditTransactions", "CreditTransactionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Ewallet.Models.AccountModels.DebitTransactions", b =>
+                {
+                    b.HasOne("EwalletApi.Models.AccountModels.Transactions", "Transactions")
+                        .WithOne("DebitTransactions")
+                        .HasForeignKey("Ewallet.Models.AccountModels.DebitTransactions", "DebitTransactionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Ewallet.Models.AccountModels.TransferTransactions", b =>
+                {
+                    b.HasOne("EwalletApi.Models.AccountModels.Transactions", "Transactions")
+                        .WithOne("TransferTransactions")
+                        .HasForeignKey("Ewallet.Models.AccountModels.TransferTransactions", "TransferTransactionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ewallet.Models.AccountModels.WalletCurrency", b =>

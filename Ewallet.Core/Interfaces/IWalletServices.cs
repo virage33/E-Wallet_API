@@ -12,12 +12,13 @@ namespace Ewallet.Core.Interfaces
     public interface IWalletServices
     {
         Task<string> CreateWallet(string uid, string maincurrency);
-        Task<string> DeleteWallet(string walletId);    
+        Task<ResponseDTO<string>> DeleteWallet(string walletId);    
         Task<ResponseDTO<string>> AddCurrency(string walletId, string currencyCode, bool isMain = false);
-        Task<bool> RemoveCurrency(string currencyId);
         Task<List<WalletDTO>> GetAllUserWallets(string uid);
         Task<WalletDTO> GetWallet(string walletId);
-        Task<ResponseDTO<decimal>> WalletBalance(string walletId);
+        Task<ResponseDTO<WalletBalanceDTO>> WalletBalance(string walletId);
+
+        Task<ResponseDTO<decimal>> UserBalance(string userId);
 
     }
 }

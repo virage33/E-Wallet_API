@@ -60,7 +60,7 @@ namespace Ewallet.DataAccess.EntityFramework
                     foreach (var user in serializedData)
                     {
                         user.UserName = user.Email;
-                        role = counter < 2 ? roles[0] : counter < 4 ? roles[1] : roles[2];
+                        role = counter < 2 ? roles[0] : roles[1];
 
                         var res = await userManager.CreateAsync(user, "P@ssword123");
                         if (res.Succeeded)

@@ -22,7 +22,7 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
         {
 
                  await context.Wallet.AddAsync(data);
-                 context.SaveChanges();
+                 await context.SaveChangesAsync();
            
             return 1;
             
@@ -36,20 +36,20 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
                 {
                     context.Remove(response);
                 }
-                context.SaveChanges();
+                await context.SaveChangesAsync();
              
             return 1;
             
         }
 
-            public async Task<List<WalletModel>> GetAllUserWallets(string Uid)
+            public async Task<List<WalletModel>> GetAllUserWallets(string uid)
         {
                 var result = new List<WalletModel>();
 
 
-            var wallets = context.Wallet;
+            var wallets = context.Wallet.Where(x=>x.UserId == uid);
 
-                    foreach (var item in wallets)
+            foreach (var item in wallets)
                     {
                         result.Add(item);
                     }
@@ -60,12 +60,19 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
 
         public async Task<WalletModel> GetIndividualUserWallet(string walletId)
         {
-            WalletModel wallet = new WalletModel();
                         
             var response = context.Wallet.Where(x => x.Id == walletId);
             
             return response.FirstOrDefault();
            
+        }
+
+        public async Task<int> UpdateWalletBalance(string walletId, decimal balance)
+        {
+            var wallet = await context.Wallet.FindAsync(walletId);
+            wallet.WalletBalance = balance;
+            var res = context.Wallet.Update(wallet);
+            return await context.SaveChangesAsync();
         }
 
     }

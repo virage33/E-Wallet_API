@@ -40,8 +40,8 @@ namespace Ewallet.Core.Implementations
             if (response.IsActive is false)
                 return "Deactivated Account";
 
-            // var roles = await UserRepository.GetUserRoles(response.UserId);
-            var roles = new List<string>{ "elite","noob"}; 
+            var roles = await UserRepository.GetUserRoles(response);
+           
             if (roles.Count <1)
                 return "user has no role";
             return _jwt.GenerateToken(response, roles);
@@ -59,7 +59,7 @@ namespace Ewallet.Core.Implementations
             user.LastName = details.LastName;
             user.password = details.Password;
             user.PhoneNumber = details.PhoneNumber;
-            
+            user.IsActive = true;
             
             
                    

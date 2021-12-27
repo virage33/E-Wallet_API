@@ -20,6 +20,10 @@ using Ewallet.DataAccess.EntityFramework;
 using Microsoft.AspNetCore.Identity;
 using Ewallet.Models;
 using Ewallet.DataAccess.EntityFramework.Interfaces;
+using AutoMapper;
+using Ewallet.Commons;
+using EwalletApi.Utilities;
+using Ewallet.Commons.Settings;
 
 namespace EwalletApi
 {
@@ -35,6 +39,15 @@ namespace EwalletApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Email
+            services.AddTransient<IMailService, MailService>();
+            //automapper
+      
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfile());
+            });
+            services.AddSingleton(mapperConfig.CreateMapper());
             //auth
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
@@ -47,6 +60,7 @@ namespace EwalletApi
             services.AddScoped<ICurrencyService, CurrencyService>();
             //transactions
             services.AddScoped<ITransactionRepository, TransactionsRepository>();
+            services.AddScoped<ITransaction, TransactionService>();
             //currency converter
             services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
             //entity framework dbContext
@@ -59,6 +73,7 @@ namespace EwalletApi
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
 
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddMvc().AddNewtonsoftJson();
 
             services.AddControllers();
@@ -98,6 +113,8 @@ namespace EwalletApi
                     }
                 });
             });
+
+            services.AddCors(c => c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()));
            
 
         }

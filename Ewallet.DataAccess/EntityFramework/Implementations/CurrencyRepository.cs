@@ -59,10 +59,9 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
         {
             var result = new List<CurrencyDTO>();
 
-
-            //var currencies = context.WalletCurrency;
             var currencies = from wc in context.WalletCurrency
                              join c in context.Currency on wc.CurrencyId equals c.Id
+                             where wc.WalletId == walletId
                              select new
                              {
                                  wc.Id,

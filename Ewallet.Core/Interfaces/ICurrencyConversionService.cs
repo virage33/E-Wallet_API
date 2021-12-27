@@ -5,7 +5,7 @@ namespace Ewallet.Core.Interfaces
 {
     public interface ICurrencyConversionService
     {
-        Task<dynamic> GetMarketPrices();
+        Task<ConversionRateDTO> GetMarketPrices();
 
         Task<dynamic> ConvertCurrency(CurrencyConverterDTO currency);
     }

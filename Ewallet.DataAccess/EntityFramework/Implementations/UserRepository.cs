@@ -26,7 +26,7 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
             {
                 res.IsActive = data;
                 response = await UpdateUserProfile(res);
-
+                
             }
             return response;
         }
@@ -87,9 +87,14 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
         public async Task<IdentityResult> UpdateUserProfile(AppUser user)
         {
             var response = await userManager.UpdateAsync(user);
+            
             return response;
         }
 
-        
+        public async Task<IList<string>> GetUserRoles(AppUser user)
+        {
+            var res = await userManager.GetRolesAsync(user);
+            return res;
+        }
     }
 }

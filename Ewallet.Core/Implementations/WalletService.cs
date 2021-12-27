@@ -1,4 +1,5 @@
-﻿using Ewallet.Commons;
+﻿using AutoMapper;
+using Ewallet.Commons;
 using Ewallet.Core.Interfaces;
 using Ewallet.DataAccess.EntityFramework.Interfaces;
 //using Ewallet.DataAccess.Interfaces;
@@ -6,6 +7,8 @@ using Ewallet.Models;
 using Ewallet.Models.DTO;
 using Ewallet.Models.DTO.WalletDTO;
 using EwalletApi.Models.AccountModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,59 +20,107 @@ namespace Ewallet.Core.Implementations
     {
         private readonly IWalletRepository _walletRepository;
         private readonly ICurrencyService _currencyService;
-        public WalletService(IWalletRepository walletRepository, ICurrencyService currencyService)
+        private readonly IMapper _mapper;
+        private readonly ICurrencyConversionService _conversionService;
+        private readonly UserManager<AppUser> _userManager;
+
+        public WalletService(IWalletRepository walletRepository, ICurrencyService currencyService, IMapper mapper, ICurrencyConversionService conversionService, UserManager<AppUser> userManager)
         {
             _walletRepository = walletRepository;
             _currencyService = currencyService;
+            this._mapper = mapper;
+            this._conversionService = conversionService;
+            this._userManager = userManager;
         }
         
 
         public async Task<ResponseDTO<string>> AddCurrency(string walletId, string currencyCode, bool isMain=false)
         {
             try
+                
             {
+               
+                var wallet = await _currencyService.GetAllCurrencies(walletId);
+                if (wallet.Data.Count>0)
+                {
+                    foreach(var item in wallet.Data)
+                    {
+                        if(item.Code.ToLower() == currencyCode.ToLower())
+                            return ResponseHelper.CreateResponse<string>(message: "currency already exist", data: null, status: false);
+                    }
+                }
+                
                 var response = await _currencyService.CreateCurrency(walletId: walletId, code: currencyCode, isMain: isMain);
 
-                if (response == "currency doesn't exist")
-                    return ResponseHelper.CreateResponse<string>(message: "currency doesn't exist", data: null, status: false);
-                if (response == "successful")
+                if (response.IsSuccessful)
                     return ResponseHelper.CreateResponse<string>(message: "Successful", data: null, status: true);
+                
+                return ResponseHelper.CreateResponse<string>(message: response.Message, data: null, status: false);
+                
             } catch(Exception e)
             {
                 return ResponseHelper.CreateResponse<string>(message: "Error", data: null, status: false,error:e);
             }
-            return ResponseHelper.CreateResponse<string>(message: "Something went wrong!", data: null, status: false); ;
 
         }
 
         public async Task<string> CreateWallet(string uid, string maincurrency)
         {
-            WalletModel wallet = new WalletModel();
-            wallet.MainCurrency = maincurrency.ToUpper().Trim();
-            wallet.WalletBalance = 0;
-            wallet.UserId = uid;
-
-            var response = await _walletRepository.CreateWallet(wallet);
-            if (response == 1)
+            try
             {
-                var currencyResponse= await AddCurrency(walletId: wallet.Id, currencyCode: wallet.MainCurrency,isMain:true);
-                if (currencyResponse.IsSuccessful == false)
-                    return currencyResponse.Message;
-                if (currencyResponse.IsSuccessful == true)
-                    return currencyResponse.Message;
+                WalletModel wallet = new WalletModel();
+                wallet.MainCurrency = maincurrency.ToUpper().Trim();
+                wallet.WalletBalance = 0;
+                wallet.UserId = uid;
+
+                var response = await _walletRepository.CreateWallet(wallet);
+                if (response == 1)
+                {
+                    var currencyResponse = await AddCurrency(walletId: wallet.Id, currencyCode: wallet.MainCurrency, isMain: true);
+                    if (currencyResponse.IsSuccessful == false)
+                        return currencyResponse.Message;
+                    if (currencyResponse.IsSuccessful == true)
+                        return currencyResponse.Message;
+                }
+
+                return null;
+            }catch(Exception e)
+            {
+                throw; 
             }
-                
-            return null;
         }
 
    
-
-        public async Task<string> DeleteWallet(string walletId)
+      
+        public async Task<ResponseDTO<string>> DeleteWallet(string walletId)
         {
-            var response = await _walletRepository.DeleteWallet(walletId);
-            if (response > 0)
-                return "successful";
-            return null;
+            try
+            {
+                //gets wallet balance
+                var res = await WalletBalance(walletId);
+                if (res.IsSuccessful)
+                {
+                    decimal walletBalance = res.Data.Balance;
+                    if (walletBalance > 0)
+                    {
+                        return ResponseHelper.CreateResponse<string>(message: "cannot delete wallet with balance > 0", data: null, status: false);
+                    }
+                    var response = await _walletRepository.DeleteWallet(walletId);
+                    if (response > 0)
+                        return ResponseHelper.CreateResponse<string>(message: "successful", data: null, status: true);
+                    return ResponseHelper.CreateResponse<string>(message: "failed", data: null, status: false);
+                }
+                else
+                {
+                    return ResponseHelper.CreateResponse<string>(message: "wallet does not exist", data: null, status: false);
+                }
+
+                
+            }catch(Exception e)
+            {
+                return ResponseHelper.CreateResponse<string>(message: "error", data: null, status: false,e);
+            }
+            
         }
 
         public async Task<List<WalletDTO>> GetAllUserWallets(string uid)
@@ -83,9 +134,9 @@ namespace Ewallet.Core.Implementations
                     WalletDTO wallet = new WalletDTO();
                     wallet.Id = item.Id;
                     var balance = await WalletBalance(item.Id);
-                    wallet.WalletBalance = balance.Data;
+                    wallet.WalletBalance = balance.Data.Balance;
                     wallet.UserId = item.UserId;
-                    wallet.MainCurrency = item.MainCurrency;
+                    wallet.MainCurrency = balance.Data.CurrencyCode;
                     result.Add(wallet);
                 }
                 foreach(var item in result)
@@ -110,9 +161,10 @@ namespace Ewallet.Core.Implementations
             {
                 result.Id = response.Id;
                 var balance = await WalletBalance(response.Id);
-                result.WalletBalance = balance.Data;
+                result.WalletBalance = balance.Data.Balance;
                 result.UserId = response.UserId;
-                result.MainCurrency = response.MainCurrency;
+                //change to main currency
+                result.MainCurrency = balance.Data.CurrencyCode;
                 
                 var currencies = await _currencyService.GetAllCurrencies(response.Id);
                 foreach(var item in currencies.Data)
@@ -125,36 +177,94 @@ namespace Ewallet.Core.Implementations
             return null;
         }
 
-        public async Task<bool> RemoveCurrency(string currencyId)
-        {
-            var response = await _currencyService.RemoveCurrency(currencyId);
-            return response.IsSuccessful;
-        }
 
-        
-
-        public async Task<ResponseDTO<decimal>> WalletBalance(string walletId)
+        public async Task<ResponseDTO<decimal>> UserBalance(string userId)
         {
             try
             {
+                decimal totalBalance = 0;
+                string currencyCode = "NGN";
+                var res = await GetAllUserWallets(userId);
+                if (res.Count > 0)
+                {
+                    foreach (var item in res)
+                    {
+                        
+                        if (item.MainCurrency!= currencyCode)
+                        {
+                            var walletBalanceToConvert = await WalletBalance(item.Id);
+                            var convertedBalance = await _conversionService.ConvertCurrency(new CurrencyConverterDTO
+                            {
+                                amount = walletBalanceToConvert.Data.Balance,
+                                From = walletBalanceToConvert.Data.CurrencyCode,
+                                To = currencyCode,
+                            });
+                            totalBalance += convertedBalance;
+                        }
+                        var walletBalance = await WalletBalance(item.Id);
+                        totalBalance += walletBalance.Data.Balance;
+                    }
+                    return ResponseHelper.CreateResponse<decimal>(message: "successful", data: totalBalance, status: true);
+                }
+                return ResponseHelper.CreateResponse<decimal>(message: "failed", data: totalBalance, status: false);
+            }
+            catch (Exception e)
+            {
+
+                return ResponseHelper.CreateResponse<decimal>(message: "error", data: 0, status: false);
+            }
+        }
+
+        //Calculates wallet balance 
+        public async Task<ResponseDTO<WalletBalanceDTO>> WalletBalance(string walletId)
+        {
+            try
+            {
+                WalletBalanceDTO result = new WalletBalanceDTO();
                 decimal totalWalletBalance = 0;
                 var response = await _currencyService.GetAllCurrencies(walletId);
+                string mainCurrency = "";
                 if (response.IsSuccessful)
                 {
                     foreach(var item in response.Data)
                     {
-                        totalWalletBalance += item.Balance;
+                        if (item.IsMain)
+                            mainCurrency = item.Code;
+                        
                     }
-                    return ResponseHelper.CreateResponse<decimal>(message: "Successful", data: totalWalletBalance, status: true);
+                    foreach(var item in response.Data)
+                    {
+                        if (!item.IsMain)
+                        {
+                            var convertertedBalance = await _conversionService.ConvertCurrency(new CurrencyConverterDTO
+                            {
+                                amount = item.Balance,
+                                From = item.Code,
+                                To = mainCurrency
+                            });
+                            totalWalletBalance += convertertedBalance;
+                        }
+                        else
+                        {
+                            totalWalletBalance += item.Balance;
+                        }   
+                    }
+                    result.Balance = totalWalletBalance;
+                    result.CurrencyCode = mainCurrency;
+                    //updates the wallet balance on the wallet table in the db
+                    await _walletRepository.UpdateWalletBalance(walletId: walletId, balance: totalWalletBalance);
+
+                    return ResponseHelper.CreateResponse<WalletBalanceDTO>(message: "Successful", data: result, status: true);
                 }
+                return ResponseHelper.CreateResponse<WalletBalanceDTO>(message: "This wallet has no currencies", data: null, status: false);
 
             }
             catch (Exception e)
             {
-                return ResponseHelper.CreateResponse<decimal>(message: "Error", data: 0, status: false,error:e);
+                return ResponseHelper.CreateResponse<WalletBalanceDTO>(message: "Error", data: null, status: false,error:e);
                 
             }
-            return ResponseHelper.CreateResponse<decimal>(message: "This wallet has no currencies", data: 0, status: false);
+           
         }
 
         

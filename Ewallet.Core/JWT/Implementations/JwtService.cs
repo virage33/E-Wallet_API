@@ -18,12 +18,14 @@ namespace Ewallet.Core.JWT.Implementations
         {
             configuration = _configuration;
         }
-        public string GenerateToken(AppUser user, List<string>roles)
+        public string GenerateToken(AppUser user, IList<string>roles)
         {
             //add claims
-            var claims = new List<Claim>();
-            var claim = new Claim(type: ClaimTypes.Name, $"{user.FirstName}{user.LastName}");
-            claims.Add(claim);
+            var claims = new List<Claim>() {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Email, $"{user.Email}"),
+            };
 
             //add roles to claims
             foreach (var role in roles)

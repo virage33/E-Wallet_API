@@ -14,5 +14,6 @@ namespace Ewallet.Core.Interfaces
         Task UpdateUser(string uid, UpdateUserProfileDTO data);
         Task<string> DeActivateUser(string uid);
         Task<string> ReActivateUser(string uid);
+        Task<IList<string>> GetUserRoles(string uid);
     }
 }
