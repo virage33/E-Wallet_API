@@ -291,7 +291,7 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
         {
             List<Transactions> result = new List<Transactions>();
             var response = context.Transactions.Where(x => context.TransferTransactions.Any(y => y.TransferTransactionsId == x.TransactionsId));
-            var transf = context.TransferTransactions.Where(x => response.Any(y => y.TransactionsId == x.TransferTransactionsId));
+            var transf = context.TransferTransactions; //.Where(x => response.Any(y => y.TransactionsId == x.TransferTransactionsId));
 
             foreach (var item in response)
             {
@@ -305,7 +305,7 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
                         Date = item.Date,
                         Remark = item.Remark,
                         CurrencyShortCode = item.CurrencyShortCode,
-                        TransferTransactions = transf.FirstOrDefault(x => x.TransferTransactionsId == item.TransactionsId)
+                       // TransferTransactions = transf.FirstOrDefault(x => x.TransferTransactionsId == item.TransactionsId)
                     });
             }
             return result;

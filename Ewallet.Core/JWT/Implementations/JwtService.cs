@@ -45,6 +45,8 @@ namespace Ewallet.Core.JWT.Implementations
                 Expires = DateTime.Now.AddDays(1)
             };
 
+          
+
             //create token
             var handler = new JwtSecurityTokenHandler();
             var token = handler.CreateToken(tokenDiscriptor);

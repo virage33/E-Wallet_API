@@ -58,7 +58,7 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
         public Task<List<CurrencyDTO>> GetAllCurrencies(string walletId)
         {
             var result = new List<CurrencyDTO>();
-
+             
             var currencies = from wc in context.WalletCurrency
                              join c in context.Currency on wc.CurrencyId equals c.Id
                              where wc.WalletId == walletId

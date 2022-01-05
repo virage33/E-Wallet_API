@@ -362,7 +362,7 @@ namespace Ewallet.Core.Implementations
             try
             {
                 List<TransferTransactionReturnDTO> result = new List<TransferTransactionReturnDTO>();
-                var res = await _transactionRepository.GetAllDebitTransactions();
+                var res = await _transactionRepository.GetAllTransferTransactions();
                 if (res.Count > 0)
                 {
                     foreach (var item in res)

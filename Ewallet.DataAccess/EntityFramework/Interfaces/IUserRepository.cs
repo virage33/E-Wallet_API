@@ -19,6 +19,8 @@ namespace Ewallet.DataAccess.EntityFramework.Interfaces
         Task<IdentityResult> DeleteUser(AppUser user);
         Task<IdentityResult> UpdateUserProfile(AppUser user);
         Task<IList<string>> GetUserRoles(AppUser user);
-        
+        Task<int> ChangeUserRole(string id, string role);
+
+
     }
 }

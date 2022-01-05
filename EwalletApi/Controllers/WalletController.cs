@@ -55,15 +55,15 @@ namespace EwalletApi.Controllers
         public async Task<IActionResult> GetUserWallets(string userId)
         {
 
+            if (String.IsNullOrWhiteSpace(userId))
+                return BadRequest("please enter a valid Uid");
+
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var isAdmin = HttpContext.User.IsInRole("admin");
 
             if (!isAdmin && loggedInUser != userId)
                 return BadRequest("Access Denied");
-
-            if (String.IsNullOrWhiteSpace(userId))
-                return BadRequest("please enter a valid Uid");
             
             var response = await _walletServices.GetAllUserWallets(userId);
             if (response != null)
@@ -73,11 +73,14 @@ namespace EwalletApi.Controllers
         }
 
 
-        // Gets an individual wallet
+       
         [HttpGet("GetWallet")]
-        //[Authorize(Roles = "elite, noob, admin")]
+        [Authorize(Roles = "elite, noob, admin")]
         public async Task<IActionResult> GetIndividualWallet(string uid,string walletId)
         {
+            if (String.IsNullOrWhiteSpace(walletId))
+                return BadRequest("enter a valid wallet Id");
+
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var isAdmin = HttpContext.User.IsInRole("admin");
@@ -85,8 +88,6 @@ namespace EwalletApi.Controllers
             if (!isAdmin && loggedInUser != uid)
                 return BadRequest("Access Denied");
 
-            if (String.IsNullOrWhiteSpace(walletId))
-                return BadRequest("enter a valid wallet Id");
             var response = await _walletServices.GetWallet(walletId);
             if (response == null)
                 return NoContent();
@@ -96,11 +97,10 @@ namespace EwalletApi.Controllers
 
        //Deletes individual wallets
         [HttpDelete("DeleteWallet")]
-        //[Authorize(Roles ="elite")]
+        [Authorize(Roles ="elite")]
         public async Task<IActionResult> DeleteWallet(string uid,string walletId)
         {
             
-
             if (String.IsNullOrWhiteSpace(walletId))
                 return BadRequest("enter a valid wallet Id");
 
@@ -119,13 +119,22 @@ namespace EwalletApi.Controllers
 
 
         [HttpPost("AddWallet")]
-        //[Authorize(Roles ="elite")]
+        [Authorize(Roles ="elite, admin")]
         public async Task<IActionResult> AddWallet(string uid , string mainCurrency)
         {
             if (String.IsNullOrWhiteSpace(uid))
                 return BadRequest("enter a valid user Id");
             if (String.IsNullOrWhiteSpace(mainCurrency))
                 return BadRequest("enter a valid currency");
+
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAdmin = HttpContext.User.IsInRole("admin");
+
+            if (!isAdmin && loggedInUser != uid)
+                return BadRequest("Access Denied");
+
+
             var response = await _walletServices.CreateWallet(uid,mainCurrency);
             if (response == null)
                 return BadRequest("Something went wrong");
@@ -134,6 +143,7 @@ namespace EwalletApi.Controllers
 
 
         [HttpPost("AddCurrency")]
+        [Authorize("elite, admin")]
         public async Task<IActionResult> AddCurrency(string walletId, string currencyCode)
         {
             if (String.IsNullOrWhiteSpace(walletId))
@@ -142,18 +152,47 @@ namespace EwalletApi.Controllers
             if (String.IsNullOrWhiteSpace(currencyCode))
                 return BadRequest("enter a valid currency code");
 
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAdmin = HttpContext.User.IsInRole("admin");
+
+            var UserWallet =await _walletServices.GetWallet(walletId);
+            if (UserWallet == null)
+                return BadRequest("Wallet doesn't exist");
+            
+            var isUserWallet = UserWallet.UserId == loggedInUser;
+
+            if (!isAdmin && isUserWallet ==false)
+                return BadRequest("Access Denied");
+
             var response = await _walletServices.AddCurrency(walletId, currencyCode);
             if (response == null)
                 return BadRequest("Something went wrong");
             return Ok(response);
         }
 
+        
+
         [HttpGet("GetAllWalletCurrencies")]
+        [Authorize(Roles ="elite, noob, admin")]
         public async Task<IActionResult> GetAllWalletCurrencies(string walletId)
         {
             if (String.IsNullOrWhiteSpace(walletId))
                 return BadRequest("please enter wallet Id");
-            
+
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAdmin = HttpContext.User.IsInRole("admin");
+
+            var UserWallet = await _walletServices.GetWallet(walletId);
+            if (UserWallet == null)
+                return BadRequest("Wallet doesn't exist");
+
+            var isUserWallet = UserWallet.UserId == loggedInUser;
+
+            if (!isAdmin && isUserWallet == false)
+                return BadRequest("Access Denied");
+
             var response = await _currencyService.GetAllCurrencies(walletId);
             
             if (response.IsSuccessful != false)
@@ -161,24 +200,52 @@ namespace EwalletApi.Controllers
             return BadRequest(response);
         }
 
+
+
+
         [HttpGet("GetCurrency")]
+        [Authorize(Roles ="noob,elite,admin")]
         public async Task<IActionResult> GetCurrency(string currencyId)
         {
             if (String.IsNullOrWhiteSpace(currencyId))
-                return BadRequest("please enter currency Id");
-            
+                return BadRequest("please enter a valid currency Id");
+
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAdmin = HttpContext.User.IsInRole("admin");
+
             var response = await _currencyService.GetCurrency(currencyId);
-            
+
             if (response.IsSuccessful != false)
+            {
+                var userWallet = await _walletServices.GetWallet(response.Data.WalletId);
+                if (!isAdmin && userWallet.UserId != loggedInUser)
+                    return BadRequest("Access Denied");
                 return Ok(response);
+            }
             return BadRequest(response);
         }
 
+
+
         [HttpDelete("RemoveCurrency")]
+        [Authorize (Roles ="elite,admin")]
         public async Task<IActionResult> RemoveCurrency(string currencyId)
         {
             if (String.IsNullOrWhiteSpace(currencyId))
                 return BadRequest("please enter wallet Id");
+
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAdmin = currentUser.IsInRole("admin");
+
+            var userCurrency = await _currencyService.GetCurrency(currencyId);
+            if (!userCurrency.IsSuccessful)
+                return BadRequest(userCurrency.Message);
+
+            var userWallet = await _walletServices.GetWallet(userCurrency.Data.WalletId);
+            if (!isAdmin && userWallet.UserId != loggedInUser)
+                return BadRequest("Access Denied!");
 
             var response = await _currencyService.RemoveCurrency(currencyId);
             
@@ -187,30 +254,81 @@ namespace EwalletApi.Controllers
             return BadRequest(response);
         }
 
+
+
         [HttpPost("Deposit")]
+        [Authorize(Roles = "noob,elite,admin")]
         public async Task<IActionResult> Deposit(string currencyId, decimal amount)
         {
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var isAdmin = currentUser.IsInRole("admin");
+
+            var userCurrency = await _currencyService.GetCurrency(currencyId);
+            if (!userCurrency.IsSuccessful)
+                return BadRequest(userCurrency.Message);
+
+            var userWallet = await _walletServices.GetWallet(userCurrency.Data.WalletId);
+            if ( !isAdmin && userWallet.UserId != loggedInUser)
+                return BadRequest("Access Denied!");
+
             var response = await _currencyService.Deposit(currencyId: currencyId, depositamount: amount);
-            return Ok(response);
+            if (!response.IsSuccessful)
+                return BadRequest(response.Message);
+            return Ok(response.Message);
         }
+
+
 
         [HttpPost("Withdraw")]
+        [Authorize(Roles ="noob,elite")]
         public async Task<IActionResult> Withdraw(DebitDTO details)
         {
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var userCurrency = await _currencyService.GetCurrency(details.CurrencyId);
+            if (!userCurrency.IsSuccessful)
+                return BadRequest(userCurrency.Message);
+
+            var userWallet = await _walletServices.GetWallet(userCurrency.Data.WalletId);
+            if (userWallet.UserId != loggedInUser)
+                return BadRequest("Access Denied!");
+
             var response = await _currencyService.Withdraw(details);
-            return Ok(response);
+            if (!response.IsSuccessful)
+                return BadRequest(response.Message);
+            return Ok(response.Message);
         }
 
+
+
         [HttpPost("Transfer")]
-        public async Task<IActionResult> Withdraw(TransferFundsDTO details)
+        [Authorize(Roles = "noob,elite")]
+        public async Task<IActionResult> Transfer(TransferFundsDTO details)
         {
+
+            ClaimsPrincipal currentUser = this.User;
+            var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var userCurrency = await _currencyService.GetCurrency(details.SenderCurrencyAddress);
+            if (!userCurrency.IsSuccessful)
+                return BadRequest(userCurrency.Message);
+
+            var userWallet = await _walletServices.GetWallet(userCurrency.Data.WalletId);
+            if (userWallet.UserId != loggedInUser)
+                return BadRequest("Access Denied!");
+
             var response = await _currencyService.Transfer(details);
             if (!response.IsSuccessful)
                 return BadRequest(response.Message);
             return Ok(response);
         }
 
+
+
         [HttpGet("UserBalance")]
+        [Authorize(Roles = "noob,elite,admin")]
         public async Task<IActionResult> UserBalance(string uid)
         {
             var response = await _walletServices.UserBalance(uid);

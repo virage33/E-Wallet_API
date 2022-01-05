@@ -38,8 +38,6 @@ namespace Ewallet.Core.Implementations
         {
             try
             {
-
-
                 WalletCurrency currency = new WalletCurrency();
                 currency.WalletId = walletId;
                 currency.IsMain = isMain;
@@ -303,6 +301,7 @@ namespace Ewallet.Core.Implementations
                     transferTransaction.TransactionType = "transfer";
                     transferTransaction.WalletCurrencyId = details.SenderCurrencyAddress;
                     transferTransaction.SenderWalletAddress = senderCurrency.Data.WalletId;
+                    transferTransaction.WalletId = senderCurrency.Data.WalletId;
                     transferTransaction.Remark = "failed";
 
                     await _transactionService.LogTransferTransactions(transferTransaction);
@@ -317,6 +316,7 @@ namespace Ewallet.Core.Implementations
                 transferTransaction.TransactionType = "transfer";
                 transferTransaction.WalletCurrencyId = details.SenderCurrencyAddress;
                 transferTransaction.SenderWalletAddress = senderCurrency.Data.WalletId;
+                transferTransaction.WalletId = senderCurrency.Data.WalletId;
                 transferTransaction.Remark = "failed";
 
                 await _transactionService.LogTransferTransactions(transferTransaction);

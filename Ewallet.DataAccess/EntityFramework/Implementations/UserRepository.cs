@@ -4,6 +4,7 @@ using EwalletApi.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,10 +13,12 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
     public class UserRepository : IUserRepository
     {
         private readonly UserManager<AppUser> userManager;
+        private readonly EwalletContext _dbContext;
 
-        public UserRepository(UserManager<AppUser> userManager)
+        public UserRepository(UserManager<AppUser> userManager, EwalletContext dbContext)
         {
             this.userManager = userManager;
+            this._dbContext = dbContext;
         }
 
         public async Task<IdentityResult> ActivateOrDeActivateUser(bool data, string uid)
@@ -78,7 +81,7 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
 
         public async Task<AppUser> GetUserByName(string username)
         {
-            var response = await userManager.FindByNameAsync(username);
+            var response =  _dbContext.Users.Where(x => x.FirstName == username).FirstOrDefault();
             return response;
         }
 
@@ -95,6 +98,17 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
         {
             var res = await userManager.GetRolesAsync(user);
             return res;
+        }
+
+        public async Task<int> ChangeUserRole(string id, string role)
+        {
+
+            var user = await GetUserById(id);
+            var userRole = await GetUserRoles(user);
+
+            await userManager.RemoveFromRolesAsync(user, userRole);
+            await userManager.AddToRoleAsync(user, role);
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

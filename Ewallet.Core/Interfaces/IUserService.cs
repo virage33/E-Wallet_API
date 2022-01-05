@@ -6,14 +6,15 @@ namespace Ewallet.Core.Interfaces
 {
     public interface IUserService
     {
-        Task<List<UserDTO>> GetAllUsers();
-        Task<List<UserDTO>> GetUsersByName(string name);
-        Task<List<UserDTO>> GetUsersByRole(string role);
-        Task<UserDTO> GetUserById(string uid);
-        Task<string> DeleteUser(string uid);
-        Task UpdateUser(string uid, UpdateUserProfileDTO data);
-        Task<string> DeActivateUser(string uid);
-        Task<string> ReActivateUser(string uid);
-        Task<IList<string>> GetUserRoles(string uid);
+        Task<ResponseDTO<List<UserDTO>>> GetAllUsers();
+        Task<ResponseDTO<List<UserDTO>>> GetUsersByName(string name);
+       // Task<ResponseDTO<List<UserDTO>>> GetUsersByRole(string role);
+        Task<ResponseDTO<UserDTO>> GetUserById(string uid);
+        Task<ResponseDTO<string>> DeleteUser(string uid);
+        Task<ResponseDTO<string>> UpdateUser(string uid, UpdateUserProfileDTO data);
+        Task<ResponseDTO<string>> DeActivateUser(string uid);
+        Task<ResponseDTO<string>> ReActivateUser(string uid);
+        //Task<ResponseDTO<IList<string>>> GetUserRoles(string uid);
+        Task<ResponseDTO<string>> ChangeUserRole(string id, string role);
     }
 }
