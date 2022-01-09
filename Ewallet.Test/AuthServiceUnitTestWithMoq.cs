@@ -31,29 +31,29 @@ namespace Ewallet.Test
             _authService = new AuthService(UserRepository.Object, JwtService.Object, WalletServices.Object);
         }
 
-        [Fact]
-        public async Task GenerateJWTTokenTest()
-        {
-            //arrange
-            var User = new AppUser();
-            User.Id = Guid.NewGuid().ToString();
-            User.Email = "suleiman.sani1@gmail.com";
-            User.UserName = User.Email;
-            User.FirstName = "susu";
-            User.LastName = "fafa";
-            IList<string> roles = new List<string> {"admin"};
-            var k = new byte[256];
+        //[Fact]
+        //public async Task GenerateJWTTokenTest()
+        //{
+        //    //arrange
+        //    var User = new AppUser();
+        //    User.Id = Guid.NewGuid().ToString();
+        //    User.Email = "suleiman.sani1@gmail.com";
+        //    User.UserName = User.Email;
+        //    User.FirstName = "susu";
+        //    User.LastName = "fafa";
+        //    IList<string> roles = new List<string> {"admin"};
+        //    var k = new byte[256];
             
-            encode.Setup(x => x.GetBytes("ghfhjn")).Returns(k);
-            var key = new SymmetricSecurityKey(k);
+        //    encode.Setup(x => x.GetBytes("ghfhjn")).Returns(k);
+        //    var key = new SymmetricSecurityKey(k);
 
              
-            encode.Verify(x => x.GetBytes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJOYW1lIjoiTXlDbGFpbSIsIm5iZiI6MTYzNzcxMDk5OCwiZXhwIjoxNjM3Nzk3Mzk4LCJpYXQiOjE2Mzc3MTA5OTh9.vQMGazi3m6nBnYvLbebyeylVPHgvXxlE6Mqv0bfLGLc"));
-            //act
-            var response =  _jwtService.GenerateToken(User,roles);
-            //assert
-            Assert.NotNull(response);
-        }
+        //    encode.Verify(x => x.GetBytes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJOYW1lIjoiTXlDbGFpbSIsIm5iZiI6MTYzNzcxMDk5OCwiZXhwIjoxNjM3Nzk3Mzk4LCJpYXQiOjE2Mzc3MTA5OTh9.vQMGazi3m6nBnYvLbebyeylVPHgvXxlE6Mqv0bfLGLc"));
+        //    //act
+        //    var response =  _jwtService.GenerateToken(User,roles);
+        //    //assert
+        //    Assert.NotNull(response);
+        //}
 
         [Fact]
         public async Task LoginAuthWrongEmailTest()
