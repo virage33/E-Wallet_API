@@ -1,0 +1,37 @@
+﻿[
+  {
+    //"Id": 0,
+    "Type": "naira",
+    "Code": "NGN"
+  },
+  {
+    //"Id": 1,
+    "Type": "dollar",
+    "Code": "USD"
+  },
+  {
+    //"Id": 2,
+    "Type": "pound",
+    "Code": "GBP"
+  },
+  {
+    //"Id": 3,
+    "Type": "euro",
+    "Code": "EUR"
+  },
+  {
+    //"Id": 4,
+    "Type": "cad dollar",
+    "Code": "CAD"
+  },
+  {
+    //"Id": 5,
+    "Type": "jp yen",
+    "Code": "YEN"
+  },
+  {
+    //"Id": 6,
+    "Type": "sa rand",
+    "Code": "RND"
+  }
+]

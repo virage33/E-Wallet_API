@@ -11,7 +11,7 @@ namespace Ewallet.DataAccess.Interfaces
         Task<List<WalletModel>> GetAllUserWallets(string Uid);
         Task<WalletModel> GetIndividualUserWallet(string walletId);
         Task<int> DeleteWallet(string walletId);
-        Task<int> CreateWallet(WalletModel Uid, string uid);
+        Task<int> CreateWallet(WalletModel Uid);
 
 
 

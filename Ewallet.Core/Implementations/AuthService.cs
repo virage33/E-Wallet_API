@@ -1,12 +1,16 @@
-﻿using Ewallet.Core.DTO;
+﻿
 using Ewallet.Core.Interfaces;
 using Ewallet.Core.JWT.Interfaces;
-using Ewallet.DataAccess.Interfaces;
+using System.Collections.Generic;
+using Ewallet.DataAccess.EntityFramework.Interfaces;
+//using Ewallet.DataAccess.Interfaces;
+using Ewallet.Models.DTO;
 using EwalletApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using Ewallet.Models;
+using Ewallet.Commons;
+using Microsoft.AspNetCore.Http;
 
 namespace Ewallet.Core.Implementations
 {
@@ -27,15 +31,19 @@ namespace Ewallet.Core.Implementations
         //Logs in the user and calls the jwt key generator
         public async Task<string> Login(LoginDTO credentials)
         {
-            List<string> ro = new List<string>() { "noob","elite" };
+            //List<string> ro = new List<string>() { "noob","elite" };
             var response = await UserRepository.GetUserByEmail(credentials.Email);
             if (response == null)
                 return "Wrong email or Password";
+           
             if (response.password != credentials.Password.Trim())
                 return "Wrong password";
+            
             if (response.IsActive is false)
                 return "Deactivated Account";
-            var roles = await UserRepository.GetUserRoles(response.UserId);
+
+            var roles = await UserRepository.GetUserRoles(response);
+           
             if (roles.Count <1)
                 return "user has no role";
             return _jwt.GenerateToken(response, roles);
@@ -47,28 +55,28 @@ namespace Ewallet.Core.Implementations
         {
             
                 
-            UserModel user = new UserModel();
+            AppUser user = new AppUser();
             user.Email = details.Email;
             user.FirstName = details.FirstName;
             user.LastName = details.LastName;
             user.password = details.Password;
             user.PhoneNumber = details.PhoneNumber;
-            user.PasswordHash = "hash";
-            user.LastModified = DateTime.Now;
+            user.IsActive = true;
+            
             
                    
             //if response is 1 send email...
             var response = await UserRepository.CreateUser(user, details.Role);
 
-            if (response == 2)
+            if (response.Succeeded == false)
                 return "exists";
             
-            if (response == 1)
+            if (response.Succeeded == true)
             {
-                var res = await _walletService.CreateWallet(user.UserId, details.MainWalletCurrency);
-                if (res == "error")
-                    return "error creating wallet";
-                return "successful";
+                var res = await _walletService.CreateWallet(user.Id, details.MainWalletCurrency);
+                if (!res.IsSuccessful )
+                    return res.Message;
+                return res.Message;
             }
                 
             return "error";
@@ -76,17 +84,31 @@ namespace Ewallet.Core.Implementations
         }
 
         //Logs out a user
-        public void LogOut()
+        public async Task<bool> LogOut(string userToken)
         {
-            throw new NotImplementedException();
+            
+            BlacklistedTokens token = new BlacklistedTokens();
+            token.Token = userToken;
+            var response = await UserRepository.BlackListUserAuthToken(token);
+            if (response > 0)
+                return true;
+            return false;
         }
 
-        public async Task<string> ForgotPassword(string email)
+        public async Task<string> ForgotPassword(ForgotPasswordDTO details)
         {
-            var response = await UserRepository.GetUserByEmail(email);
+            var response = await UserRepository.GetUserByEmail(details.email);
             if (response != null)
                 return response.password;
             return "0";
+        }
+
+        public async Task<bool> IsTokenblacklisted(string token)
+        {
+            var response = await UserRepository.IsTokenBlacklisted(token);
+            if (!response)
+                return false;
+            return true;
         }
     }
 }

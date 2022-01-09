@@ -1,5 +1,5 @@
-﻿using Ewallet.Core.DTO;
-using Ewallet.Core.Interfaces;
+﻿using Ewallet.Core.Interfaces;
+using Ewallet.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -60,7 +60,7 @@ namespace EwalletApi.UI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Please enter valid data");
-            var response = await authService.ForgotPassword(email.email);
+            var response = await authService.ForgotPassword(email);
             if (response == "0")
                 return BadRequest("User does not Exist!");
 
@@ -71,7 +71,12 @@ namespace EwalletApi.UI.Controllers
         [HttpPost("Logout")]
         public  IActionResult Logout()
         {
-            return Ok();
+            var key = HttpContext.Request.Headers["Authorization"];
+
+            var res = authService.LogOut(key);
+            if (!res.Result)
+                return BadRequest("something happened");
+            return Ok("logged out");
         }
 
     }

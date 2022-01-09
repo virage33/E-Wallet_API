@@ -1,7 +1,5 @@
-﻿using Ewallet.Core.DTO;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+using Ewallet.Models.DTO;
 using System.Threading.Tasks;
 
 namespace Ewallet.Core.Interfaces
@@ -12,7 +10,9 @@ namespace Ewallet.Core.Interfaces
 
         Task<string> Register(RegisterDTO details);
 
-        void LogOut();
-        Task<string> ForgotPassword(string email);
+        Task<bool> LogOut(string token);
+
+        Task<bool> IsTokenblacklisted(string token);
+        Task<string> ForgotPassword(ForgotPasswordDTO details);
     }
 }

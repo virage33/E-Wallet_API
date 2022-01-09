@@ -1,4 +1,5 @@
 ﻿using Ewallet.Core.JWT.Interfaces;
+using Ewallet.Models;
 using EwalletApi.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Ewallet.Core.JWT.Implementations
 {
@@ -17,12 +19,16 @@ namespace Ewallet.Core.JWT.Implementations
         {
             configuration = _configuration;
         }
-        public string GenerateToken(UserModel user, List<string>roles)
+
+
+        public string GenerateToken(AppUser user, IList<string>roles)
         {
             //add claims
-            var claims = new List<Claim>();
-            var claim = new Claim(type: ClaimTypes.Name, $"{user.FirstName}{user.LastName}");
-            claims.Add(claim);
+            var claims = new List<Claim>() {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Email, $"{user.Email}"),
+            };
 
             //add roles to claims
             foreach (var role in roles)
@@ -41,6 +47,8 @@ namespace Ewallet.Core.JWT.Implementations
                 SigningCredentials = new SigningCredentials(key, algorithm: SecurityAlgorithms.HmacSha256Signature),
                 Expires = DateTime.Now.AddDays(1)
             };
+
+          
 
             //create token
             var handler = new JwtSecurityTokenHandler();

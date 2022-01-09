@@ -1,9 +1,8 @@
-﻿using Ewallet.Models;
+﻿using Ewallet.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Web.Http.ModelBinding;
+
 
 namespace Ewallet.Commons
 {
@@ -23,22 +22,22 @@ namespace Ewallet.Commons
 
 
 
-        private static Dictionary<string, List<String>> CreateErrorFromModelState(ModelStateDictionary modelState)
-        {
-            if (modelState == null)
-                return null;
+        //private static Dictionary<string, List<String>> CreateErrorFromModelState(ModelStateDictionary modelState)
+        //{
+        //    if (modelState == null)
+        //        return null;
 
 
 
-            var dictionary = new Dictionary<string, List<string>>();
-            foreach (var error in modelState)
-            {
-                dictionary[error.Key] = error.Value.Errors.Select(x => x.ErrorMessage).ToList();
-            }
+        //    var dictionary = new Dictionary<string, List<string>>();
+        //    foreach (var error in modelState)
+        //    {
+        //        dictionary[error.Key] = error.Value.Errors.Select(x => x.ErrorMessage).ToList();
+        //    }
 
 
 
-            return dictionary;
-        }
+        //    return dictionary;
+        //}
     }
 }

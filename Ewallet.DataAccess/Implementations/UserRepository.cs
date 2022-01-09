@@ -1,5 +1,7 @@
 ﻿using Ewallet.DataAccess.Interfaces;
+using Ewallet.Models;
 using EwalletApi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -374,7 +376,7 @@ namespace Ewallet.DataAccess.Implementations
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 throw;
@@ -422,7 +424,7 @@ namespace Ewallet.DataAccess.Implementations
 
                 }
             }
-            catch (Exception e)
+            catch (Exception )
             {
 
                 throw;

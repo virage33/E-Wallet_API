@@ -8,12 +8,22 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Ewallet.DataAccess.Implementations;
-using Ewallet.DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
+//using Ewallet.DataAccess.Implementations;
+using Ewallet.DataAccess.EntityFramework.Implementations;
+//using Ewallet.DataAccess.Interfaces;
 using Ewallet.Core.Interfaces;
 using Ewallet.Core.Implementations;
 using Ewallet.Core.JWT.Implementations;
 using Ewallet.Core.JWT.Interfaces;
+using Ewallet.DataAccess.EntityFramework;
+using Microsoft.AspNetCore.Identity;
+using Ewallet.Models;
+using Ewallet.DataAccess.EntityFramework.Interfaces;
+using AutoMapper;
+using Ewallet.Commons;
+using EwalletApi.Utilities;
+using Ewallet.Commons.Settings;
 
 namespace EwalletApi
 {
@@ -29,10 +39,21 @@ namespace EwalletApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Email
+            services.AddTransient<IMailService, MailService>();
+            //automapper
+      
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfile());
+            });
+            services.AddSingleton(mapperConfig.CreateMapper());
             //auth
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            //Unit of work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             //wallet
             services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<IWalletServices, WalletService>();
@@ -41,14 +62,20 @@ namespace EwalletApi
             services.AddScoped<ICurrencyService, CurrencyService>();
             //transactions
             services.AddScoped<ITransactionRepository, TransactionsRepository>();
+            services.AddScoped<ITransaction, TransactionService>();
             //currency converter
             services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
+            //entity framework dbContext
+            services.AddDbContextPool<EwalletContext>( options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<EwalletContext>();
             
-
+            //seeder class
+            services.AddTransient<Seeder>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IWalletRepository, WalletRepository>();
 
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddMvc().AddNewtonsoftJson();
 
             services.AddControllers();
@@ -88,12 +115,14 @@ namespace EwalletApi
                     }
                 });
             });
+
+            services.AddCors(c => c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()));
            
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Seeder seed)
         {
             if (env.IsDevelopment())
             {
@@ -114,6 +143,7 @@ namespace EwalletApi
             {
                 endpoints.MapControllers();
             });
+            seed.Seed().Wait();
         }
     }
 }
