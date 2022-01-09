@@ -22,17 +22,20 @@ namespace Ewallet.Core.Implementations
         private readonly ICurrencyService _currencyService;
         private readonly IMapper _mapper;
         private readonly ICurrencyConversionService _conversionService;
-        private readonly UserManager<AppUser> _userManager;
+        //private readonly UserManager<AppUser> _userManager;
+        private IUnitOfWork _unitOfWork;
 
-        public WalletService(IWalletRepository walletRepository, ICurrencyService currencyService, IMapper mapper, ICurrencyConversionService conversionService, UserManager<AppUser> userManager)
+
+        public WalletService(IWalletRepository walletRepository, ICurrencyService currencyService, IMapper mapper, ICurrencyConversionService conversionService, IUnitOfWork unitOfWork)
         {
             _walletRepository = walletRepository;
             _currencyService = currencyService;
             this._mapper = mapper;
             this._conversionService = conversionService;
-            this._userManager = userManager;
+          //  this._userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
-        
+
 
         public async Task<ResponseDTO<string>> AddCurrency(string walletId, string currencyCode, bool isMain=false)
         {
@@ -41,6 +44,7 @@ namespace Ewallet.Core.Implementations
             {
                
                 var wallet = await _currencyService.GetAllCurrencies(walletId);
+                
                 if (wallet.Data.Count>0)
                 {
                     foreach(var item in wallet.Data)
@@ -64,7 +68,7 @@ namespace Ewallet.Core.Implementations
 
         }
 
-        public async Task<string> CreateWallet(string uid, string maincurrency)
+        public async Task<ResponseDTO<string>> CreateWallet(string uid, string maincurrency)
         {
             try
             {
@@ -73,20 +77,21 @@ namespace Ewallet.Core.Implementations
                 wallet.WalletBalance = 0;
                 wallet.UserId = uid;
 
-                var response = await _walletRepository.CreateWallet(wallet);
-                if (response == 1)
+                await _unitOfWork.WalletRepository.CreateWallet(wallet);
+                var response =  await _unitOfWork.Save();
+
+                if (response >0)
                 {
                     var currencyResponse = await AddCurrency(walletId: wallet.Id, currencyCode: wallet.MainCurrency, isMain: true);
                     if (currencyResponse.IsSuccessful == false)
-                        return currencyResponse.Message;
-                    if (currencyResponse.IsSuccessful == true)
-                        return currencyResponse.Message;
+                        return ResponseHelper.CreateResponse<string>(currencyResponse.Message, null, false);
+                    return ResponseHelper.CreateResponse<string>(currencyResponse.Message, null, true);
                 }
 
                 return null;
             }catch(Exception e)
             {
-                throw; 
+                return ResponseHelper.CreateResponse<string>("error", null, false,e);
             }
         }
 

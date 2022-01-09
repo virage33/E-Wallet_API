@@ -9,6 +9,8 @@ using EwalletApi.Models;
 using System;
 using System.Threading.Tasks;
 using Ewallet.Models;
+using Ewallet.Commons;
+using Microsoft.AspNetCore.Http;
 
 namespace Ewallet.Core.Implementations
 {
@@ -72,9 +74,9 @@ namespace Ewallet.Core.Implementations
             if (response.Succeeded == true)
             {
                 var res = await _walletService.CreateWallet(user.Id, details.MainWalletCurrency);
-                if (res == "error")
-                    return "error creating wallet";
-                return "successful";
+                if (!res.IsSuccessful )
+                    return res.Message;
+                return res.Message;
             }
                 
             return "error";
@@ -82,9 +84,15 @@ namespace Ewallet.Core.Implementations
         }
 
         //Logs out a user
-        public void LogOut()
+        public async Task<bool> LogOut(string userToken)
         {
-            throw new NotImplementedException();
+            
+            BlacklistedTokens token = new BlacklistedTokens();
+            token.Token = userToken;
+            var response = await UserRepository.BlackListUserAuthToken(token);
+            if (response > 0)
+                return true;
+            return false;
         }
 
         public async Task<string> ForgotPassword(ForgotPasswordDTO details)
@@ -93,6 +101,14 @@ namespace Ewallet.Core.Implementations
             if (response != null)
                 return response.password;
             return "0";
+        }
+
+        public async Task<bool> IsTokenblacklisted(string token)
+        {
+            var response = await UserRepository.IsTokenBlacklisted(token);
+            if (!response)
+                return false;
+            return true;
         }
     }
 }

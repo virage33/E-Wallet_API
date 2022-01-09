@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ewallet.Commons", "Ewallet.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ewallet.Models", "Ewallet.Models\Ewallet.Models.csproj", "{612C4E2F-657F-4F6B-96C3-C41FD825BD9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewallet.db", "Ewallet.db\Ewallet.db.csproj", "{997142D3-6199-42B0-B9BE-48303A421EFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ewallet.db", "Ewallet.db\Ewallet.db.csproj", "{997142D3-6199-42B0-B9BE-48303A421EFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewallet.Test", "Ewallet.Test\Ewallet.Test.csproj", "{C6FA05C1-9830-483F-B9D4-8EF1EA8B8D34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ewallet.NunitTest", "Ewallet.NunitTest\Ewallet.NunitTest.csproj", "{C5D970DD-9085-4876-99B2-045445DA84E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{997142D3-6199-42B0-B9BE-48303A421EFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{997142D3-6199-42B0-B9BE-48303A421EFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{997142D3-6199-42B0-B9BE-48303A421EFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6FA05C1-9830-483F-B9D4-8EF1EA8B8D34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6FA05C1-9830-483F-B9D4-8EF1EA8B8D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6FA05C1-9830-483F-B9D4-8EF1EA8B8D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6FA05C1-9830-483F-B9D4-8EF1EA8B8D34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5D970DD-9085-4876-99B2-045445DA84E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5D970DD-9085-4876-99B2-045445DA84E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5D970DD-9085-4876-99B2-045445DA84E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5D970DD-9085-4876-99B2-045445DA84E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

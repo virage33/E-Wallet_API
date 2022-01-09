@@ -11,7 +11,7 @@ namespace Ewallet.Core.Interfaces
 {
     public interface IWalletServices
     {
-        Task<string> CreateWallet(string uid, string maincurrency);
+        Task<ResponseDTO<string>> CreateWallet(string uid, string maincurrency);
         Task<ResponseDTO<string>> DeleteWallet(string walletId);    
         Task<ResponseDTO<string>> AddCurrency(string walletId, string currencyCode, bool isMain = false);
         Task<List<WalletDTO>> GetAllUserWallets(string uid);

@@ -71,7 +71,12 @@ namespace EwalletApi.UI.Controllers
         [HttpPost("Logout")]
         public  IActionResult Logout()
         {
-            return Ok();
+            var key = HttpContext.Request.Headers["Authorization"];
+
+            var res = authService.LogOut(key);
+            if (!res.Result)
+                return BadRequest("something happened");
+            return Ok("logged out");
         }
 
     }

@@ -20,12 +20,14 @@ namespace EwalletApi.UI.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IAuthService _authService;
 
         private IUserService UserService { get; set; }
-        public UserController(IUserService userService, UserManager<AppUser> userManager)
+        public UserController(IUserService userService, UserManager<AppUser> userManager, IAuthService authService)
         {
             UserService = userService;
             this._userManager = userManager;
+            this._authService = authService;
         }
 
 
@@ -34,6 +36,12 @@ namespace EwalletApi.UI.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Get(int page, int perPage)
         {
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             var listOfUserToReturn = new List<UserDTO>();
             var result = await UserService.GetAllUsers();
             if(result!= null)
@@ -54,11 +62,16 @@ namespace EwalletApi.UI.Controllers
             return BadRequest("no result");
         }
 
-        // GET personal user profile
+     
         [HttpGet("GetProfile/{id}")]
         [Authorize(Roles = "noob , elite , admin")]
         public async Task<IActionResult> GetProfile(string id)
         {
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             var result = await UserService.GetUserById(id);
             if (!result.IsSuccessful)
                 return BadRequest(result.Message);
@@ -66,20 +79,30 @@ namespace EwalletApi.UI.Controllers
         }
 
         [HttpGet("GetUsersByName")]
-        // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetUsersByName(string name)
         {
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             var result = await UserService.GetUsersByName(name);
             if (!result.IsSuccessful)
                 return BadRequest(result.Message);
             return Ok(result);
         }
 
-        //updates user profile
+        
         [HttpPatch("UpdateUserProfile/{id}")]
         [Authorize(Roles = "noob , elite , admin")]
         public async Task<IActionResult> UpdateUserProfile(string uid, [FromBody] UpdateUserProfileDTO value)
         {
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             var res = await UserService.UpdateUser(uid,value);
             if (!res.IsSuccessful)
                 return BadRequest(res.Message);
@@ -91,6 +114,11 @@ namespace EwalletApi.UI.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteUserAccount(string id)
         {
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             var response = await UserService.DeleteUser(id);
             if(!response.IsSuccessful) 
                 return BadRequest(response.Message);
@@ -102,6 +130,11 @@ namespace EwalletApi.UI.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<IActionResult> ChangeUserRole(string id,string role)
         {
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var isAdmin = HttpContext.User.IsInRole("admin");
@@ -121,7 +154,11 @@ namespace EwalletApi.UI.Controllers
         [Authorize(Roles = "admin, noob, elite")]
         public async Task<IActionResult> DeactivateUser(string uid)
         {
-            
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var isAdmin = HttpContext.User.IsInRole("admin");
@@ -140,6 +177,10 @@ namespace EwalletApi.UI.Controllers
         [Authorize(Roles = "admin, noob, elite")]
         public async Task<IActionResult> ActivateUser(string uid)
         {
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
 
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;

@@ -22,8 +22,7 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
         {
 
                  await context.Wallet.AddAsync(data);
-                 await context.SaveChangesAsync();
-           
+               //  await context.SaveChangesAsync();
             return 1;
             
         }

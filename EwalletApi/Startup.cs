@@ -52,6 +52,8 @@ namespace EwalletApi
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            //Unit of work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             //wallet
             services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<IWalletServices, WalletService>();

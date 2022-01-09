@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Ewallet.Core.JWT.Implementations
 {
@@ -18,6 +19,8 @@ namespace Ewallet.Core.JWT.Implementations
         {
             configuration = _configuration;
         }
+
+
         public string GenerateToken(AppUser user, IList<string>roles)
         {
             //add claims

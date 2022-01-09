@@ -20,6 +20,9 @@ namespace Ewallet.DataAccess.EntityFramework.Interfaces
         Task<IdentityResult> UpdateUserProfile(AppUser user);
         Task<IList<string>> GetUserRoles(AppUser user);
         Task<int> ChangeUserRole(string id, string role);
+        Task<int> BlackListUserAuthToken(BlacklistedTokens token);
+        Task<bool> IsTokenBlacklisted(string token);
+        Task<bool> DeleteExpiredToken();
 
 
     }

@@ -10,7 +10,9 @@ namespace Ewallet.Core.Interfaces
 
         Task<string> Register(RegisterDTO details);
 
-        void LogOut();
+        Task<bool> LogOut(string token);
+
+        Task<bool> IsTokenblacklisted(string token);
         Task<string> ForgotPassword(ForgotPasswordDTO details);
     }
 }

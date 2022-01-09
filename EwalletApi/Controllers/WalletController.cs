@@ -25,12 +25,15 @@ namespace EwalletApi.Controllers
         private readonly IWalletServices _walletServices;
         private readonly ICurrencyService _currencyService;
         private readonly IMailService _mailService;
+        private readonly IAuthService _authService;
 
-        public WalletController(IWalletServices walletServices, ICurrencyService currencyService, IMailService mailService)
+        public WalletController(IWalletServices walletServices, ICurrencyService currencyService, IMailService mailService, IAuthService authService)
         {
+
             _walletServices = walletServices;
             _currencyService = currencyService;
             this._mailService = mailService;
+            this._authService = authService;
         }
 
         [HttpPost("email")]
@@ -49,19 +52,23 @@ namespace EwalletApi.Controllers
         }
 
 
-        //Gets all user wallets
+        
         [HttpGet("GetUserWallets")]
         [Authorize(Roles = "noob , elite,admin")]
         public async Task<IActionResult> GetUserWallets(string userId)
         {
-
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+            
             if (String.IsNullOrWhiteSpace(userId))
                 return BadRequest("please enter a valid Uid");
 
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var isAdmin = HttpContext.User.IsInRole("admin");
-
+            
             if (!isAdmin && loggedInUser != userId)
                 return BadRequest("Access Denied");
             
@@ -78,6 +85,13 @@ namespace EwalletApi.Controllers
         [Authorize(Roles = "elite, noob, admin")]
         public async Task<IActionResult> GetIndividualWallet(string uid,string walletId)
         {
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
+
             if (String.IsNullOrWhiteSpace(walletId))
                 return BadRequest("enter a valid wallet Id");
 
@@ -100,7 +114,13 @@ namespace EwalletApi.Controllers
         [Authorize(Roles ="elite")]
         public async Task<IActionResult> DeleteWallet(string uid,string walletId)
         {
-            
+
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             if (String.IsNullOrWhiteSpace(walletId))
                 return BadRequest("enter a valid wallet Id");
 
@@ -122,6 +142,12 @@ namespace EwalletApi.Controllers
         [Authorize(Roles ="elite, admin")]
         public async Task<IActionResult> AddWallet(string uid , string mainCurrency)
         {
+
+            //var userToken = HttpContext.Request.Headers["Authorization"];
+            //var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            //if (blacklisted)
+            //    return NotFound();
+
             if (String.IsNullOrWhiteSpace(uid))
                 return BadRequest("enter a valid user Id");
             if (String.IsNullOrWhiteSpace(mainCurrency))
@@ -146,11 +172,19 @@ namespace EwalletApi.Controllers
         [Authorize("elite, admin")]
         public async Task<IActionResult> AddCurrency(string walletId, string currencyCode)
         {
+
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             if (String.IsNullOrWhiteSpace(walletId))
                 return BadRequest("enter a valid user Id");
 
             if (String.IsNullOrWhiteSpace(currencyCode))
                 return BadRequest("enter a valid currency code");
+
 
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -177,6 +211,13 @@ namespace EwalletApi.Controllers
         [Authorize(Roles ="elite, noob, admin")]
         public async Task<IActionResult> GetAllWalletCurrencies(string walletId)
         {
+
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             if (String.IsNullOrWhiteSpace(walletId))
                 return BadRequest("please enter wallet Id");
 
@@ -207,6 +248,13 @@ namespace EwalletApi.Controllers
         [Authorize(Roles ="noob,elite,admin")]
         public async Task<IActionResult> GetCurrency(string currencyId)
         {
+
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             if (String.IsNullOrWhiteSpace(currencyId))
                 return BadRequest("please enter a valid currency Id");
 
@@ -232,6 +280,14 @@ namespace EwalletApi.Controllers
         [Authorize (Roles ="elite,admin")]
         public async Task<IActionResult> RemoveCurrency(string currencyId)
         {
+
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
+
             if (String.IsNullOrWhiteSpace(currencyId))
                 return BadRequest("please enter wallet Id");
 
@@ -260,6 +316,13 @@ namespace EwalletApi.Controllers
         [Authorize(Roles = "noob,elite,admin")]
         public async Task<IActionResult> Deposit(string currencyId, decimal amount)
         {
+
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var isAdmin = currentUser.IsInRole("admin");
@@ -284,6 +347,13 @@ namespace EwalletApi.Controllers
         [Authorize(Roles ="noob,elite")]
         public async Task<IActionResult> Withdraw(DebitDTO details)
         {
+
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -308,6 +378,13 @@ namespace EwalletApi.Controllers
         public async Task<IActionResult> Transfer(TransferFundsDTO details)
         {
 
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
+
             ClaimsPrincipal currentUser = this.User;
             var loggedInUser = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -331,10 +408,20 @@ namespace EwalletApi.Controllers
         [Authorize(Roles = "noob,elite,admin")]
         public async Task<IActionResult> UserBalance(string uid)
         {
+
+
+            var userToken = HttpContext.Request.Headers["Authorization"];
+            var blacklisted = await _authService.IsTokenblacklisted(userToken);
+            if (blacklisted)
+                return NotFound();
+
             var response = await _walletServices.UserBalance(uid);
             if (!response.IsSuccessful)
                 return BadRequest(response.Message);
             return Ok(response);
         }
+
+
+        
     }
 }

@@ -21,6 +21,7 @@ namespace Ewallet.DataAccess.EntityFramework
         public DbSet<CreditTransactions> CreditTransactions { get; set; }
         public DbSet<DebitTransactions> DebitTransactions { get; set; }
         public DbSet<TransferTransactions> TransferTransactions { get; set; }
+        public DbSet<BlacklistedTokens> BlacklistedTokens { get; set; } 
 
         public EwalletContext(DbContextOptions<EwalletContext> options)
             : base(options)

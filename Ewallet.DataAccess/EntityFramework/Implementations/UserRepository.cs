@@ -110,5 +110,24 @@ namespace Ewallet.DataAccess.EntityFramework.Implementations
             await userManager.AddToRoleAsync(user, role);
             return await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<int> BlackListUserAuthToken(BlacklistedTokens token)
+        {
+            await _dbContext.BlacklistedTokens.AddAsync(token);
+            return await _dbContext.SaveChangesAsync();
+        }
+
+        public Task<bool> IsTokenBlacklisted(string token)
+        {
+            var response = _dbContext.BlacklistedTokens.Where(x => x.Token == token).FirstOrDefault();
+            if (response != null)
+                return Task.FromResult(true);
+            return Task.FromResult(false);
+        }
+
+        public Task<bool> DeleteExpiredToken()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
