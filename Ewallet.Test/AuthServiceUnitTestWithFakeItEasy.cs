@@ -34,27 +34,7 @@ namespace Ewallet.Test
         public ICurrencyConversionService currencyConversion = A.Fake<ICurrencyConversionService>();
         public IUnitOfWork unit = A.Fake<IUnitOfWork>();
 
-        //[Fact]
-        //public async Task WalletServiceTest()
-        //{
-        //    string UserId = "34ffaae2-65ce-43c3-9510-a2c0d1702848";
-        //    string code = "ngn";
-        //    WalletModel wallet = new WalletModel();
-        //    wallet.MainCurrency = code;
-        //    wallet.WalletBalance = 0;
-        //    wallet.UserId = UserId;
-
-           
-        //    var result = A.Fake<ResponseDTO<string>>();
-           
-        //    var WalletService = new WalletService(walletRepo,currencyService,autoMapper,currencyConversion,unit);
-        //    A.CallTo(() => unit.WalletRepository.CreateWallet(wallet)).Returns(Task.FromResult(1));
-        //    A.CallTo(() => unit.Save()).Returns(Task.FromResult(1));
-            
-
-        //    var res = await WalletService.CreateWallet(UserId, code);
-        //    Assert.True(!res.IsSuccessful);
-        //}
+      
 
         [Fact]
         public async Task LoginAuthSuccessfulTest()
