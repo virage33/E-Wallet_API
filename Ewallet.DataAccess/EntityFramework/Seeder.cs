@@ -16,11 +16,26 @@ namespace Ewallet.DataAccess.EntityFramework
         private readonly EwalletContext context;
         private readonly UserManager<AppUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly string path = @"C:\Users\hp\source\repos\EwalletApi\Ewallet.DataAccess\EntityFramework\";
+        private readonly string fpath = @"C:\Users\hp\source\repos\EwalletApi\Ewallet.DataAccess\EntityFramework\SeedData.json";
+        private readonly string cfpath = @"C:\Users\hp\source\repos\EwalletApi\Ewallet.DataAccess\EntityFramework\CurrencySeedData.json";
         private DirectoryInfo directoryInfo;
+        private string dpath;
+        private FileInfo fileInfo;
+      
 
         public Seeder(EwalletContext ctx, UserManager<AppUser> userManager, RoleManager<IdentityRole> role)
         {
-
+            dpath= Directory.GetCurrentDirectory();
+            directoryInfo = new DirectoryInfo(path);
+            fileInfo = new FileInfo(fpath);
+            if (!directoryInfo.Exists){
+                directoryInfo.Create();
+            }
+            if (!fileInfo.Exists)
+            {
+                fileInfo.Create();
+            }
             context = ctx;
             this.userManager = userManager;
             this.roleManager = role;
@@ -43,7 +58,7 @@ namespace Ewallet.DataAccess.EntityFramework
                 context.SaveChanges();
 
 
-                var currency = System.IO.File.ReadAllText(@"C:\Users\hp\source\repos\EwalletApi\Ewallet.DataAccess\EntityFramework\CurrencySeedData.json");
+                var currency = System.IO.File.ReadAllText(@$"{directoryInfo.FullName}CurrencySeedData.json");
                 var serializedCurrencyData = JsonConvert.DeserializeObject<List<Currency>>(currency);
                 if (!context.Currency.Any())
                 {
@@ -53,7 +68,7 @@ namespace Ewallet.DataAccess.EntityFramework
                     }
                 }
 
-                var data = System.IO.File.ReadAllText(@"C:\Users\hp\source\repos\EwalletApi\Ewallet.DataAccess\EntityFramework\SeedData.json");
+                var data = System.IO.File.ReadAllText(@$"{directoryInfo.FullName}SeedData.json");
                 var serializedData = JsonConvert.DeserializeObject<List<AppUser>>(data);
                 context.SaveChanges();
 
