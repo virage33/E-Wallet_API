@@ -2,9 +2,9 @@ name: Asp.Net core Q-Wallet CI
 
 on:
   push:
-    branches: [ master,entityframework ]
+    branches: [ master,entityframework,release ]
   pull_request:
-    branches: [ master ]
+    branches: [ master,release ]
 
 jobs:
   build:
