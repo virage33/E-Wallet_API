@@ -44,6 +44,7 @@ namespace Ewallet.Test
             var auth = await _authService.Login(testData);
             //Assert
             Assert.Equal("Wrong email or Password", auth);
+            
 
         }
     }

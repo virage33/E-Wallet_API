@@ -66,7 +66,7 @@ namespace EwalletApi
             //currency converter
             services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
             //entity framework dbContext
-            services.AddDbContextPool<EwalletContext>( options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<EwalletContext>( options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<EwalletContext>();
             
             //seeder class

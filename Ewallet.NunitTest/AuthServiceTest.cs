@@ -7,6 +7,7 @@ namespace Ewallet.NunitTest
         [SetUp]
         public void Setup()
         {
+
         }
 
         [Test]

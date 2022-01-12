@@ -31,7 +31,7 @@ namespace Ewallet.Core.Implementations
         //Logs in the user and calls the jwt key generator
         public async Task<string> Login(LoginDTO credentials)
         {
-            //List<string> ro = new List<string>() { "noob","elite" };
+           
             var response = await UserRepository.GetUserByEmail(credentials.Email);
             if (response == null)
                 return "Wrong email or Password";
