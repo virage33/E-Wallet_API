@@ -68,7 +68,7 @@ namespace Ewallet.DataAccess.EntityFramework
                     }
                 }
 
-                var data = System.IO.File.ReadAllText(@$"{directoryInfo.FullName}SeedData.json");
+                var data = System.IO.File.ReadAllText(@$"{directoryInfo.FullName}/SeedData.json");
                 var serializedData = JsonConvert.DeserializeObject<List<AppUser>>(data);
                 context.SaveChanges();
 

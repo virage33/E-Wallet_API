@@ -127,11 +127,10 @@ namespace EwalletApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EwalletApi v1"));
+             
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             
@@ -143,7 +142,9 @@ namespace EwalletApi
             {
                 endpoints.MapControllers();
             });
-            seed.Seed().Wait();
+            // seed.Seed().Wait();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EwalletApi v1"));
         }
     }
 }
