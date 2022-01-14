@@ -35,10 +35,10 @@ namespace Ewallet.Core.Implementations
            
             var response = await UserRepository.GetUserByEmail(credentials.Email);
             if (response == null)
-                return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "wrong email or password", null, status: false);
+                return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "Wrong email or Password", null, status: false);
 
             if (response.password != credentials.Password.Trim())
-                return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "wrong password", null, status: false);
+                return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "Wrong Password", null, status: false);
 
             if (response.IsActive is false)
                 return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "Deactivated Account", null, status: false); ;

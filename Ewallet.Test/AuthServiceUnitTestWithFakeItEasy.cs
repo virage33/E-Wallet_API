@@ -80,7 +80,7 @@ namespace Ewallet.Test
             //act
             var resp = await AuthService.Login(testData);
             //assert
-            Assert.Equal("Wrong password",resp.Message);
+            Assert.Equal("Wrong Password",resp.Message);
         }
 
         [Fact]
