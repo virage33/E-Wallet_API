@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ewallet.DataAccess.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,11 +51,24 @@ namespace Ewallet.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BlacklistedTokens",
+                columns: table => new
+                {
+                    BlacklistedTokensId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Token = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlacklistedTokens", x => x.BlacklistedTokensId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Currency",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     Type = table.Column<string>(type: "nvarchar(30)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(5)", nullable: false)
                 },
@@ -69,7 +82,7 @@ namespace Ewallet.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -90,7 +103,7 @@ namespace Ewallet.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -193,29 +206,6 @@ namespace Ewallet.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transactions",
-                columns: table => new
-                {
-                    TransactionsId = table.Column<string>(nullable: false),
-                    WalletIdId = table.Column<string>(nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Remark = table.Column<string>(type: "nvarchar(15)", nullable: true),
-                    TransactionType = table.Column<string>(type: "nvarchar(10)", nullable: false),
-                    CurrencyShortCode = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Transactions", x => x.TransactionsId);
-                    table.ForeignKey(
-                        name: "FK_Transactions_Wallet_WalletIdId",
-                        column: x => x.WalletIdId,
-                        principalTable: "Wallet",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "WalletCurrency",
                 columns: table => new
                 {
@@ -240,6 +230,36 @@ namespace Ewallet.DataAccess.Migrations
                         principalTable: "Wallet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transactions",
+                columns: table => new
+                {
+                    TransactionsId = table.Column<string>(nullable: false),
+                    WalletId = table.Column<string>(nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Remark = table.Column<string>(type: "nvarchar(15)", nullable: true),
+                    TransactionType = table.Column<string>(type: "nvarchar(10)", nullable: false),
+                    CurrencyShortCode = table.Column<string>(nullable: false),
+                    WalletCurrencyId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transactions", x => x.TransactionsId);
+                    table.ForeignKey(
+                        name: "FK_Transactions_WalletCurrency_WalletCurrencyId",
+                        column: x => x.WalletCurrencyId,
+                        principalTable: "WalletCurrency",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Transactions_Wallet_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -312,8 +332,7 @@ namespace Ewallet.DataAccess.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -339,13 +358,17 @@ namespace Ewallet.DataAccess.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_WalletIdId",
+                name: "IX_Transactions_WalletCurrencyId",
                 table: "Transactions",
-                column: "WalletIdId");
+                column: "WalletCurrencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_WalletId",
+                table: "Transactions",
+                column: "WalletId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wallet_UserId",
@@ -381,6 +404,9 @@ namespace Ewallet.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BlacklistedTokens");
+
+            migrationBuilder.DropTable(
                 name: "CreditTransactions");
 
             migrationBuilder.DropTable(
@@ -390,13 +416,13 @@ namespace Ewallet.DataAccess.Migrations
                 name: "TransferTransactions");
 
             migrationBuilder.DropTable(
-                name: "WalletCurrency");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Transactions");
+
+            migrationBuilder.DropTable(
+                name: "WalletCurrency");
 
             migrationBuilder.DropTable(
                 name: "Currency");

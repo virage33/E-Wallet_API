@@ -66,7 +66,7 @@ namespace EwalletApi
             //currency converter
             services.AddScoped<ICurrencyConversionService, CurrencyConversionService>();
             //entity framework dbContext
-            services.AddDbContextPool<EwalletContext>( options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<EwalletContext>( options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<EwalletContext>();
             
             //seeder class
@@ -127,11 +127,10 @@ namespace EwalletApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EwalletApi v1"));
+             
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             
@@ -144,6 +143,8 @@ namespace EwalletApi
                 endpoints.MapControllers();
             });
             seed.Seed().Wait();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EwalletApi v1"));
         }
     }
 }

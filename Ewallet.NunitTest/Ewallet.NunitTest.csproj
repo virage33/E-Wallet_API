@@ -17,7 +17,6 @@
     <ProjectReference Include="..\Ewallet.Commons\Ewallet.Commons.csproj" />
     <ProjectReference Include="..\Ewallet.Core\Ewallet.Core.csproj" />
     <ProjectReference Include="..\Ewallet.DataAccess\Ewallet.DataAccess.csproj" />
-    <ProjectReference Include="..\Ewallet.db\Ewallet.db.csproj" />
     <ProjectReference Include="..\Ewallet.Models\Ewallet.Models.csproj" />
     <ProjectReference Include="..\EwalletApi\EwalletApi.UI.csproj" />
   </ItemGroup>

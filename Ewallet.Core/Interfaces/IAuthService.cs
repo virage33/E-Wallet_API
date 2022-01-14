@@ -1,12 +1,13 @@
 ﻿
 using Ewallet.Models.DTO;
+using Ewallet.Models.DTO.ReturnDTO;
 using System.Threading.Tasks;
 
 namespace Ewallet.Core.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> Login(LoginDTO credentials);
+        Task<ResponseDTO<LoginReturnDTO>> Login(LoginDTO credentials);
 
         Task<string> Register(RegisterDTO details);
 
