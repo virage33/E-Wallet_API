@@ -9,11 +9,11 @@ namespace Ewallet.NunitTest
         //{
 
         //}
-
+        //[TestCase(2,3)]
         //[Test]
         //public void Test1()
         //{
-        //    Assert.Pass();
+        //    Assert
         //}
     }
 }

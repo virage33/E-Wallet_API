@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ewallet.DataAccess.Migrations
 {
     [DbContext(typeof(EwalletContext))]
-    [Migration("20220112101856_initial")]
+    [Migration("20220113134338_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

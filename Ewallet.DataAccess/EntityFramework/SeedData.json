@@ -9,7 +9,7 @@
     "wallet": [
       {
         "Id": "b9832663-20ce-46ff-97e9-ef4bdf91599c",
-        "MainCurrency": "Jimenez",
+        "MainCurrency": "NGN",
         "Currency": [
           {
             "Id": "a552bc23-c946-44b3-ae76-d023d4de00cc",
@@ -25,12 +25,12 @@
       },
       {
         "Id": "6ebd037e-ad40-42ee-9d65-9c8d18f30185",
-        "MainCurrency": "Delaney",
+        "MainCurrency": "NGN",
         "Currency": [
           {
             "Id": "da4988a2-3da7-46c1-8ca0-9e309fa12a53",
             "Currencybalance": 2816.52,
-            "IsMain": false,
+            "IsMain": true,
             "WalletId": "cfb64d40-a9e8-4174-bac3-24f9540a013a",
             "CurrencyId": 1
           }
@@ -41,12 +41,12 @@
       },
       {
         "Id": "fed6837e-52e2-4d6a-bb60-fa393b5d1466",
-        "MainCurrency": "Ford",
+        "MainCurrency": "NGN",
         "Currency": [
           {
             "Id": "886da671-238e-47eb-b141-ea864c0197b2",
             "Currencybalance": 3325.95,
-            "IsMain": false,
+            "IsMain": true,
             "WalletId": "738087a4-e443-4826-b0cb-58cc533022b9",
             "CurrencyId": 1
           }
@@ -72,7 +72,7 @@
           {
             "Id": "d5ea30b5-f501-4ab6-8911-30ae915f0ef4",
             "Currencybalance": 2741.87,
-            "IsMain": false,
+            "IsMain": true,
             "WalletId": "3ee676cc-8644-48ad-96b4-c0c5a26a48d2",
             "CurrencyId": 1
           }
@@ -83,7 +83,7 @@
       },
       {
         "Id": "98d6e90d-656d-4489-97c9-d93de1d288e1",
-        "MainCurrency": "Clay",
+        "MainCurrency": "USD",
         "Currency": [
           {
             "Id": "f9334380-5963-4dcd-bbc7-ec22611ec5f9",
@@ -99,7 +99,7 @@
       },
       {
         "Id": "7f6c4ce9-6d8c-4f7c-a4fc-f31f343f4be9",
-        "MainCurrency": "Cote",
+        "MainCurrency": "NGN",
         "Currency": [
           {
             "Id": "2c478197-4db9-4b8b-b008-88dd03470576",
@@ -125,7 +125,7 @@
     "wallet": [
       {
         "Id": "eebda5ff-27da-4fee-a8ef-ce70deab5cff",
-        "MainCurrency": "Geraldine",
+        "MainCurrency": "USD",
         "Currency": [
           {
             "Id": "c7bf70bc-5bc2-418c-bb08-771fc22342a8",

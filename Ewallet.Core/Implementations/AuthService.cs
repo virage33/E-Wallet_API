@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Ewallet.Models;
 using Ewallet.Commons;
 using Microsoft.AspNetCore.Http;
+using Ewallet.Models.DTO.ReturnDTO;
 
 namespace Ewallet.Core.Implementations
 {
@@ -29,24 +30,26 @@ namespace Ewallet.Core.Implementations
 
 
         //Logs in the user and calls the jwt key generator
-        public async Task<string> Login(LoginDTO credentials)
+        public async Task<ResponseDTO<LoginReturnDTO>> Login(LoginDTO credentials)
         {
            
             var response = await UserRepository.GetUserByEmail(credentials.Email);
             if (response == null)
-                return "Wrong email or Password";
-           
+                return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "wrong email or password", null, status: false);
+
             if (response.password != credentials.Password.Trim())
-                return "Wrong password";
-            
+                return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "wrong password", null, status: false);
+
             if (response.IsActive is false)
-                return "Deactivated Account";
+                return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "Deactivated Account", null, status: false); ;
 
             var roles = await UserRepository.GetUserRoles(response);
            
             if (roles.Count <1)
-                return "user has no role";
-            return _jwt.GenerateToken(response, roles);
+                return ResponseHelper.CreateResponse<LoginReturnDTO>(message: "error something happened", null, status: false); 
+            string jwtToken = _jwt.GenerateToken(response, roles);
+
+            return ResponseHelper.CreateResponse<LoginReturnDTO>(message:"successful",new LoginReturnDTO {Token=jwtToken,uid=response.Id },status:true) ;
         }
        
 

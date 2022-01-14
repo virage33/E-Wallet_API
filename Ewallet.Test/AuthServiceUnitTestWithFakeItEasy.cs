@@ -61,7 +61,7 @@ namespace Ewallet.Test
             //act
             var resp = await AuthService.Login(testData);
             //assert
-            Assert.NotNull(resp);
+            Assert.NotNull(resp.Data);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Ewallet.Test
             //act
             var resp = await AuthService.Login(testData);
             //assert
-            Assert.Equal("Wrong password",resp);
+            Assert.Equal("Wrong password",resp.Message);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Ewallet.Test
             //act
             var resp = await AuthService.Login(testData);
             //assert
-            Assert.Equal("Wrong email or Password",resp);
+            Assert.Equal("Wrong email or Password",resp.Message);
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Ewallet.Test
             //act
             var resp = await AuthService.Login(testData);
             //assert
-            Assert.Equal("Deactivated Account",resp);
+            Assert.Equal("Deactivated Account", resp.Message);
         }
     }
 }

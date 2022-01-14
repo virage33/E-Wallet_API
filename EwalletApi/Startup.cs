@@ -142,7 +142,7 @@ namespace EwalletApi
             {
                 endpoints.MapControllers();
             });
-            // seed.Seed().Wait();
+            seed.Seed().Wait();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EwalletApi v1"));
         }
